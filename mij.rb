@@ -1,0 +1,6 @@
+require './BoardIndex.rb'
+require '../Emailer.rb'
+require './Keygen.rb'
+require './Post.rb'
+require './Preview.rb'
+require './Topic.rb'

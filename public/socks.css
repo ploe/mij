@@ -1,0 +1,67 @@
+body {
+	background-image: url(background-compressed.gif); 
+	background-repeat: no-repeat; 
+	background-attachment: fixed;
+	background-size: 100%;
+}
+
+.disclaimer {
+	font-family: Courier New, monospace;
+	font-size: 12px;
+}
+
+.content
+{
+        width: 966px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #FFFFFF;
+        opacity: 0.95;
+        font-family: Tahoma, Verdana, sans-serif;
+        font-size: 18px;
+}
+
+.stuffcontainer {
+	width: 966px;
+        margin-left: auto;
+        margin-right: auto;
+}
+
+.userstuff {
+	border-radius: 8px;
+        padding: 15px;
+        background-color: #FFFFFF;
+        opacity: 0.95;
+        font-family: Tahoma, Verdana, sans-serif;
+        font-size: 18px;
+}
+
+
+.spacer { 
+	clear: both;
+}
+
+#body {
+	width: 960px; 
+	height: 600px;
+	resize: none;
+}
+
+#title {
+	width: 650px;
+}
+
+body, button, input, select, textarea {
+	font-family: Tahoma, Verdana, sans-serif;
+	font-size: 18px;
+}
+
+.content {
+	margin-left: auto;
+	margin-right: auto;
+	width: 966px;
+}
+
+
