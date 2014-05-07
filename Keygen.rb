@@ -8,7 +8,9 @@ require 'digest/sha2'
 
 require '../Emailer.rb'
 
-def render(params)
+require './User.rb'
+
+def render(params, user)
 	if (not params[:email]) then return ["Keygen: No email input"] end
 
 	email = {
@@ -18,35 +20,17 @@ def render(params)
 	}
 	path = "/mij/" + email['to']
 	
-	if not File.directory?(path) then home = new_user(path) end
+	if not User.exists?(email['to']) then User.register(email['to']) end
 
 	# Creates new session key	
 	sha = Digest::SHA2.new(512) << SecureRandom.uuid << email['to']
-	email['url'] = "http://ploe.co.uk/login?email=" + email['to'] + "&key=" +  sha.to_s
+	email['url'] = "https://ploe.co.uk/login?email=" + email['to'] + "&key=" +  sha.to_s
 
-	# 
 	File.open(path + "/newkey", 'w') { |file|
-		file.write(email['url'])	
+		file.write(sha.to_s)	
 	}
-	
 	
 	Email.render("./res/keygen_email.html", email)
-end
-
-private
-
-def new_user(path)
-	home = Dir.mkdir(path)
-	Dir.mkdir(path + "/posts")
-	Dir.mkdir(path + "/perks")
-	
-	user = {
-		:pseudonym => "anonymous",
-	}
-
-	File.open(path + '/config.json', "w") { |file|
-		file.write(JSON.dump(user))
-	}
 end
 
 end

@@ -1,6 +1,7 @@
 require './BoardIndex.rb'
 require '../Emailer.rb'
 require './Keygen.rb'
+require './Login.rb'
 require './Post.rb'
 require './Preview.rb'
 require './Topic.rb'

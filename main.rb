@@ -7,12 +7,44 @@ set :environment, :production
 
 require 'json'
 require './mij.rb'
+require './User.rb'
+require './Tatl.rb'
+
+def get_user(request)
+	session = request.cookies['session']
+	if session == nil then return nil end
+	session = JSON.load(session)
+	user = nil
+	if User.exists?(session["email"]) then user = User.new(session["email"], session["key"]) end
+	user
+end
+
+get '/slugger' do
+	user = get_user(request)
+	Tatl.render(user)	
+end
 
 get '/login' do
-	response.set_cookie 'session',  {
-		:value => {:key => "1234", :email => "ploe@ploe.co.uk"},
-		:max_age => "2592000",
-	}
+	if (Login.render(params)) then
+		value = JSON.dump({:key => URI.decode(params[:key]), :email => URI.decode(params[:email])})
+		response.set_cookie 'session',  {
+			:value => value,
+			:max_age => "2419200",
+		}
+	end
+
+	redirect to('/')
+end
+
+get '/logout' do
+	user = get_user(request)
+	if user then user.logout end
+	redirect to('/submission')	
+end
+
+get '/submission' do
+	tatl = Tatl.render(get_user(request))
+	File.read("res/bare.html").sub(/<!-- {tatl} -->/, tatl)
 end
 
 get '/cookie' do
@@ -45,7 +77,6 @@ post '/preview' do
 	Preview.new.render(params[:article])
 end
 
-post '/keygen' do
-	Keygen.new.render(params)
+post '/keygen' do	
+	Keygen.new.render(params, get_user(request))
 end
-
