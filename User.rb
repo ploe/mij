@@ -40,6 +40,28 @@ def authentic
         false
 end
 
+# Submits a submission, there is a 1 million char limit for reasons.
+def post(title, body)
+	body.gsub!(/<.*?>/, "")
+	post = path + "/posts/" + title
+	if title == "" then
+		return "User: Huh? You forgot the title for your submission."
+	elsif File.exists?(post)
+		return "User: Submission named \"#{title}\" already exists. Damnit!"
+	elsif body == "" then
+		return "User: No text in your submission. Well...!"
+	elsif body.length > 1000000 then 
+		return "User: Submission exceeds a million characters. OHMY."
+	end
+
+	Dir.mkdir(post)
+	File.open(post + "/#{@email}", "w") do |file|
+		file.write(body)
+	end
+
+	"Success! \"#{title}\" was uploaded."
+end
+
 def User.exists?(email)
 	Dir.exists?("/mij/" + email)
 end
@@ -56,8 +78,9 @@ def User.register
                 :pseudonym => "anonymous",
         }
 
-        File.open(path + '/config.json', "w") { |file|
+       File.open(path + '/config.json', "w") do |file|
                 file.write(JSON.dump(user))
-        }
+       end
 end
+
 end

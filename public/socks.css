@@ -5,6 +5,17 @@ body {
 	background-size: 100%;
 }
 
+a
+{
+	color: #0000FF;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
 .disclaimer {
 	font-family: Courier New, monospace;
 	font-size: 12px;

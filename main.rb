@@ -7,21 +7,27 @@ set :environment, :production
 
 require 'json'
 require './mij.rb'
-require './User.rb'
-require './Tatl.rb'
 
+# Grabs the user and ensures their cookie is authentic
 def get_user(request)
 	session = request.cookies['session']
 	if session == nil then return nil end
 	session = JSON.load(session)
 	user = nil
-	if User.exists?(session["email"]) then user = User.new(session["email"], session["key"]) end
+	if User.exists?(session["email"]) then 
+		user = User.new(session["email"], session["key"])
+		if not user.authentic then user = nil  end
+	end
+
 	user
 end
 
-get '/slugger' do
-	user = get_user(request)
-	Tatl.render(user)	
+get '/page' do
+	src = "./public/" + params[:src] + ".html"
+	if File.exists?(src) and (content = File.read(src)) then
+		tatl = Tatl.render(get_user(request))
+		content = madlib(content, {'tatl' => tatl})
+	end
 end
 
 get '/login' do
@@ -43,24 +49,24 @@ get '/logout' do
 end
 
 get '/submission' do
-	tatl = Tatl.render(get_user(request))
-	File.read("res/bare.html").sub(/<!-- {tatl} -->/, tatl)
+	article = URI.decode(params[:article])
+	user = URI.decode(params[:user])
+
+	path = "/mij/#{user}/posts/#{article}/#{user}" 
+	content = File.read(path)
+
+	madlib File.read("res/bare.html"), { 
+		'tatl' => Tatl.render(get_user(request)),
+		'content' => content,
+	}
 end
 
-get '/cookie' do
-	request.cookies['session'];
+get '/submit' do
+	Submit.render(Tatl.render(get_user(request)))
 end
 
 get '/' do
 	BoardIndex.new.render(nil)	
-end
-
-get '/email' do
-	Email.render("hello, <!-- {to} -->", {'to' => "ploe@hotmail.co.uk", 'subject' => 'Test email champ' })
-end
-
-get '/break' do
-	string = "" + nil
 end
 
 # A topic is an individual thread on a board. A topic is essentially a 
@@ -70,7 +76,7 @@ get '/topic' do
 end
 
 post '/post' do
-	Post.new.render(params[:article])
+	Post.render(params, get_user(request))
 end
 
 post '/preview' do
