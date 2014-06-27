@@ -15,7 +15,8 @@ def Post.render(params, user)
 
 	meta = ""
 	if prompt =~ /Success/i then
-		meta = meta_refresh(5, "/submission")
+		meta = meta_refresh(2, "/submission?user=#{URI.encode(user.pseudonym)}&article=#{URI.encode(article['title'])}")
+		prompt += " <IMG src=\"/throbber.gif\">"
 	end
 
 	madlib File.read("res/bare.html"), {

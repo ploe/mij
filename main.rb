@@ -14,9 +14,12 @@ def get_user(request)
 	if session == nil then return nil end
 	session = JSON.load(session)
 	user = nil
+
 	if User.exists?(session["email"]) then 
 		user = User.new(session["email"], session["key"])
 		if not user.authentic then user = nil  end
+	else
+		response.delete_cookie('session')
 	end
 
 	user
@@ -25,44 +28,70 @@ end
 get '/page' do
 	src = "./public/" + params[:src] + ".html"
 	if File.exists?(src) and (content = File.read(src)) then
-		tatl = Tatl.render(get_user(request))
-		content = madlib(content, {'tatl' => tatl})
+		madlib(content, {
+			'tatl' => Tatl.render(get_user(request)),
+			'title' => params[:src]
+		})
 	end
 end
 
 get '/login' do
-	if (Login.render(params)) then
-		value = JSON.dump({:key => URI.decode(params[:key]), :email => URI.decode(params[:email])})
+	key = URI.decode(params[:key])
+	email = URI.decode(params[:email])
+
+	page = Login.render(params)
+	if (page =~ /Success/) then
+		value = JSON.dump({:key => key, :email => email})
 		response.set_cookie 'session',  {
 			:value => value,
 			:max_age => "2419200",
 		}
+
 	end
 
-	redirect to('/')
+	page
+
 end
 
 get '/logout' do
 	user = get_user(request)
 	if user then user.logout end
-	redirect to('/submission')	
+	redirect to('/page?src=about')	
 end
 
 get '/submission' do
 	article = URI.decode(params[:article])
 	user = URI.decode(params[:user])
 
-	path = "/mij/#{user}/posts/#{article}/#{user}" 
-	content = File.read(path)
+	meta = ""
+	content = User.fetch_article(user, article)
+	if content == "" then
+		content = "Submission: I'm afraid \"#{article}\" by #{user} doesn't exist. Soz, pal!"
+		meta = meta_refresh(3, "/page?src=about")
+	end
 
-	madlib File.read("res/bare.html"), { 
+	status 404
+	madlib File.read("res/bare.html"), {
+		'content' => "<DIV class=\"content\"><P>#{content}</P></DIV><BR>",
+		'meta' => meta,
+		'title' => "#{article} by #{user}",
 		'tatl' => Tatl.render(get_user(request)),
-		'content' => content,
 	}
 end
 
+get '/submissions' do
+	Submissions.render(params, Tatl.render(get_user(request)))
+end
+
 get '/submit' do
-	Submit.render(Tatl.render(get_user(request)))
+	user = get_user(request)
+	if user and user.pseudonym != "" then
+		Submit.render(Tatl.render(get_user(request)))
+	elsif user
+		redirect to("/page?src=register")
+	else	
+		redirect to("/page?src=about")
+	end
 end
 
 get '/' do
@@ -83,6 +112,12 @@ post '/preview' do
 	Preview.new.render(params[:article])
 end
 
+post '/register' do
+	user = get_user(request)
+	user.set_pseudonym(params[:pseudonym])
+end
+
 post '/keygen' do	
 	Keygen.new.render(params, get_user(request))
+	redirect to("/page?src=about")
 end

@@ -14,11 +14,16 @@
 # Their key is the session key that the user is logged in with.
 class User
 
-attr_accessor :perks, :email, :key
+attr_accessor :perks, :email, :key, :pseudonym
 
 def initialize(email, key)
 	@email = email
 	@key = key
+
+	@pseudonym = ""
+	if File.exists?(path + "/pseudonym") then
+		@pseudonym = File.read(path + "/pseudonym")		
+	end
 
 	@perks = {}
 	Dir.foreach(path + "/perks") do |i|
@@ -28,7 +33,14 @@ end
 
 # Builds a new user directory
 def path
-	"/mij/" + @email
+	"/mij/accounts/" + @email
+end
+
+#
+def login
+	if File.exists?(path + "/newkey") then
+		File.rename(path + "/newkey", path + "/key")
+	end
 end
 
 def logout
@@ -38,6 +50,13 @@ end
 def authentic
         if File.read(path + "/key") == @key then return true end
         false
+end
+
+def newkey
+	if File.exists?(path + "/newkey")
+		return File.read(path + "/newkey")
+        end
+	""
 end
 
 # Submits a submission, there is a 1 million char limit for reasons.
@@ -55,32 +74,73 @@ def post(title, body)
 	end
 
 	Dir.mkdir(post)
-	File.open(post + "/#{@email}", "w") do |file|
+	File.open(post + "/#{@pseudonym}", "w") do |file|
 		file.write(body)
 	end
 
 	"Success! \"#{title}\" was uploaded."
 end
 
-def User.exists?(email)
-	Dir.exists?("/mij/" + email)
+def set_pseudonym(str)
+	if str !~ /^[[:alnum:]_ ]+$/ then 
+		return "User: Pseudonym \"#{str}\" disallowed since it should only contain alpha-numeric characters, underscores and spaces ([A-Za-z0-9_ ])"
+	end
+
+	if (len = str.length) > 42 then
+		return "User: Hey, your pseudonym can only be 42 characters and \"#{str}\" is #{len}. Arbitrary."
+	end
+
+	if @pseudonym != "" then
+		return "User: Silly... You can't set your username to \"#{str}\" as it's already \"#{@pseudonym}\""
+	end
+
+	dst =  "/mij/pseudonym/#{str}"
+	if File.exists?(dst) then
+		return "User: Gosh, I'm sorry. A user with the pseudonym \"#{str}\" already exists! Whoops..."
+	end
+
+	FileUtils.symlink(path, dst)
+	FileUtils.symlink(path + "/posts", "/mij/submissions/" + str)	
+	FileUtils.symlink(path + "/featured", "/mij/featured/" + str)	
+
+	File.open(path + "/pseudonym", "w") do |file|
+		file.write(str)
+	end
+
+
+	return "Success!"
 end
 
-def User.register
-	path = "/mij/" + email
+def User.exists?(email)
+	Dir.exists?("/mij/accounts/" + email)
+end
+
+def User.register(email)
+	path = "/mij/accounts/" + email
 
 	home = Dir.mkdir(path)
+	File.open(path + "/key", "w").close
         Dir.mkdir(path + "/posts")
         Dir.mkdir(path + "/perks")
         Dir.mkdir(path + "/featured")
 
-        user = {
-                :pseudonym => "anonymous",
-        }
+end
 
-       File.open(path + '/config.json', "w") do |file|
-                file.write(JSON.dump(user))
-       end
+def User.fetch_article(user, article)
+	path = "/mij/pseudonym/#{user}/posts/#{article}/#{user}" 
+	if File.exists?(path) then return File.read(path) end
+	""
+end
+
+def User.count_buzz(user, article)
+	path = "/mij/submissions/#{user}/#{article}"
+	count = -1
+	Dir.foreach(path) do |file|
+		if file =~ /^\./ then next end
+		count += 1
+	end
+
+	count
 end
 
 end

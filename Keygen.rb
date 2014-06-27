@@ -18,7 +18,7 @@ def render(params, user)
 		'subject' => "ploe.co.uk - Login Key",
 
 	}
-	path = "/mij/" + email['to']
+	path = "/mij/accounts/" + email['to']
 	
 	if not User.exists?(email['to']) then User.register(email['to']) end
 

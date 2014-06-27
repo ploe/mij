@@ -75,4 +75,32 @@ body, button, input, select, textarea {
 	width: 966px;
 }
 
+.submissionslist {
+	border-collapse: collapse;
+	text-align: center;
+}
 
+.submissionslist .head {
+}
+
+.submissionslist .data .article {
+	text-align: left;
+}
+
+.submissionslist .data:hover {
+	background-color: #FFFF66;
+}
+
+.submissionslist tr {
+	border-bottom:1px solid #DDDDDD;
+}
+
+.submissionslist td {
+	vertical-align: top;
+	width: 15%;
+	word-wrap: break-word;	
+}
+
+.submissionslist .head .article {
+	width: 40%;
+}

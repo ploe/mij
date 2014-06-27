@@ -3,22 +3,32 @@
 class Login
 
 def Login.render(params)
-	dir = "/mij/" + URI.decode(params[:email])
+	email = URI.decode(params[:email])
 	key = URI.decode(params[:key])
-	file = dir + "/newkey"
 
-	newkey = ""
-	$stderr.puts File.exists?(newkey)
-	if File.exists?(file) then 
-		newkey = File.read(file) 
+	prompt = "Login: User \"#{email}\" could not be logged in."
+	
+	user = nil
+	if User.exists?(email) then 
+		user = User.new(email, key)
 	end
 
-	if key == newkey then
-		File.rename(file, dir + "/key")
-		return true	
+	meta = ""
+	if user and user.newkey == key then
+		user.login
+		prompt = "Success! You're now logged in... Champ."
+		if user.pseudonym == "" then meta = meta_refresh(2, "/page?src=register")
+		else meta = meta_refresh(2, "/page?src=about") end
 	end
 
-	false
+	tatl = Tatl.render(user)
+
+	madlib File.read("res/bare.html"), {
+		'content' => "<DIV class=\"content\">#{prompt}</DIV><BR>",
+		'meta' => meta,
+		'tatl' => tatl,
+		'title' => "logging in",
+	}
 end
 
 
