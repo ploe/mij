@@ -6,6 +6,8 @@ set :port, 8989
 set :environment, :production
 
 require 'json'
+require 'cgi'
+require 'github/markdown'
 require './mij.rb'
 
 # Grabs the user and ensures their cookie is authentic
@@ -36,8 +38,8 @@ get '/page' do
 end
 
 get '/login' do
-	key = URI.decode(params[:key])
-	email = URI.decode(params[:email])
+	key = CGI.unescape(params[:key])
+	email = CGI.unescape(params[:email])
 
 	page = Login.render(params)
 	if (page =~ /Success/) then
@@ -59,26 +61,6 @@ get '/logout' do
 	redirect to('/page?src=about')	
 end
 
-get '/submission' do
-	article = URI.decode(params[:article])
-	user = URI.decode(params[:user])
-
-	meta = ""
-	content = User.fetch_article(user, article)
-	if content == "" then
-		content = "Submission: I'm afraid \"#{article}\" by #{user} doesn't exist. Soz, pal!"
-		meta = meta_refresh(3, "/page?src=about")
-	end
-
-	status 404
-	madlib File.read("res/bare.html"), {
-		'content' => "<DIV class=\"content\"><P>#{content}</P></DIV><BR>",
-		'meta' => meta,
-		'title' => "#{article} by #{user}",
-		'tatl' => Tatl.render(get_user(request)),
-	}
-end
-
 get '/submissions' do
 	Submissions.render(params, Tatl.render(get_user(request)))
 end
@@ -94,6 +76,14 @@ get '/submit' do
 	end
 end
 
+get '/article' do
+	Article.render(params, get_user(request))
+end
+
+get '/critique' do
+	Critique.render(params, Tatl.render(get_user(request)))
+end
+
 get '/' do
 	BoardIndex.new.render(nil)	
 end
@@ -105,7 +95,8 @@ get '/topic' do
 end
 
 post '/post' do
-	Post.render(params, get_user(request))
+	user = get_user(request)
+	Post.render(params, user)
 end
 
 post '/preview' do

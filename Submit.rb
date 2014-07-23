@@ -6,18 +6,16 @@
 module Submit
 
 def Submit.render(tatl)
-	page = File.read("res/form.html")
-	madlibs = {
+	madlib File.read("res/form.html"), {
 		'prompt' => prompt,
 		'tatl' => tatl,
 		'title' => 'submit',
+		'title-input' => "<P><INPUT type=\"text\" name=\"article[title]\" id=\"title\" placeholder=\"Title\"></P>\n",
+		'verbs' => 
+			"<DIV class=\"verbs\">\n" +
+			"<BUTTON formmethod=\"post\" id=\"preview\" formaction=\"./post\">Submit</BUTTON>\n" +
+			"</DIV>"
 	}
-
-	madlibs.keys.each do |tag|
-		page.gsub!(/<!-- {#{tag}} -->/, madlibs[tag])
-	end
-
-	page
 end
 
 private

@@ -2,6 +2,9 @@
 
 # User is the type we use to represent a client and their perks in mij.
 #
+# The pseudonym is stored as CGI escaped, this means we can have all kinds
+# of meta characters floating around in it and we just don't care.
+#
 # posts are the live article submissions they currently have on the system
 # These will be blitzed on each iteration.
 #
@@ -22,7 +25,7 @@ def initialize(email, key)
 
 	@pseudonym = ""
 	if File.exists?(path + "/pseudonym") then
-		@pseudonym = File.read(path + "/pseudonym")		
+		@pseudonym = CGI.unescape(File.read(path + "/pseudonym"))
 	end
 
 	@perks = {}
@@ -62,7 +65,7 @@ end
 # Submits a submission, there is a 1 million char limit for reasons.
 def post(title, body)
 	body.gsub!(/<.*?>/, "")
-	post = path + "/posts/" + title
+	post = path + "/posts/" + CGI.escape(title)
 	if title == "" then
 		return "User: Huh? You forgot the title for your submission."
 	elsif File.exists?(post)
@@ -82,10 +85,6 @@ def post(title, body)
 end
 
 def set_pseudonym(str)
-	if str !~ /^[[:alnum:]_ ]+$/ then 
-		return "User: Pseudonym \"#{str}\" disallowed since it should only contain alpha-numeric characters, underscores and spaces ([A-Za-z0-9_ ])"
-	end
-
 	if (len = str.length) > 42 then
 		return "User: Hey, your pseudonym can only be 42 characters and \"#{str}\" is #{len}. Arbitrary."
 	end
@@ -94,6 +93,7 @@ def set_pseudonym(str)
 		return "User: Silly... You can't set your username to \"#{str}\" as it's already \"#{@pseudonym}\""
 	end
 
+	str = CGI.escape(str)
 	dst =  "/mij/pseudonym/#{str}"
 	if File.exists?(dst) then
 		return "User: Gosh, I'm sorry. A user with the pseudonym \"#{str}\" already exists! Whoops..."
@@ -126,13 +126,60 @@ def User.register(email)
 
 end
 
-def User.fetch_article(user, article)
-	path = "/mij/pseudonym/#{user}/posts/#{article}/#{user}" 
-	if File.exists?(path) then return File.read(path) end
-	""
+#	builds up an article hash, last param turns off trying to eat the 
+#	content.
+def User.fetch_article(user, article, getcontent=true)
+	article = {
+		'title' => article,
+		'cgi-title' => CGI.escape(article),
+		'html-title' => CGI.escapeHTML(article),
+		
+		'user' => user,
+		'cgi-user' => CGI.escape(user),
+		'html-user' => CGI.escapeHTML(user),
+	}
+
+	article['path'] = "/mij/pseudonym/#{article['cgi-user']}/posts/#{article['cgi-title']}/"
+	article['exists?'] = File.exists?(article['path'])
+
+	if getcontent and article['exists?'] then
+		article['added'] = File.mtime(article['path']).to_i
+
+		path = article['path'] + article['cgi-user']
+		article['body'] = GitHub::Markdown.render_gfm(File.read(path))
+		article['updated'] = File.mtime(path).to_i
+		article['critiques'] = fetch_critiques(article)
+	end
+
+	article
+end
+
+def User.fetch_critiques(article)
+	critiques = []
+	Dir.foreach(article['path']) do |file|
+		if file == article['cgi-user'] or file == ".." or file == "." then
+			next
+		end
+
+		fullpath = article['path'] + file 
+		critiques.push ({
+			'user' => file,
+			'critique' => GitHub::Markdown.render_gfm(File.read(fullpath)),
+			'added' => File.mtime(fullpath).to_i,
+		})
+	end
+
+	critiques.sort_by! do |c|
+		c['added']
+	end
+
+	critiques	
 end
 
 def User.count_buzz(user, article)
+	article = CGI.escape(article)
+	user = CGI.escape(user)
+
 	path = "/mij/submissions/#{user}/#{article}"
 	count = -1
 	Dir.foreach(path) do |file|

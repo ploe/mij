@@ -10,11 +10,12 @@ def Submissions.render(params, tatl)
 
 		Dir.foreach(path + user) do |article|
 			if article =~ /^\./ then next end
+			article = CGI.unescape(article)
 			sub = {
 				'user' => user,
 				'article' => article,
-				'updated' => File.mtime("#{path}#{user}/#{article}").to_i,
-				'added' => File.mtime("#{path}#{user}/#{article}/#{user}").to_i,
+				'updated' => File.mtime("#{path}#{user}/#{CGI.escape(article)}").to_i,
+				'added' => File.mtime("#{path}#{user}/#{CGI.escape(article)}/#{user}").to_i,
 				'buzz' => User.count_buzz(user, article),
 			}
 			submissions.push(sub)
@@ -27,12 +28,13 @@ def Submissions.render(params, tatl)
 		else sub[sort] end
 	end
 
-	order = params[:order] || "desc"
+	order = params[:order] || "des"
 	if order == "des" then submissions.reverse! end
 
 	madlib(File.read("res/bare.html"), {
 		'tatl' => tatl,
-		'content' => "<DIV class=\"content\">" + render_list(submissions, params) + "</DIV><BR>\n",
+		'title' => "submissions",
+		'content' => "<DIV class=\"content\">\n" + render_list(submissions, params) + "</DIV><BR>\n",
 	})
 end
 
@@ -48,7 +50,7 @@ def Submissions.render_head(params)
 		glyph = ""
 		if name == sort then
 			table += "<STRONG>"
-			glyph = "(#{order})"
+			glyph = "<IMG src =\"#{order}.png\" style=\"float: right;\">"
 			if tmp == "asc" then
 				tmp = "des"
 			else
@@ -65,8 +67,8 @@ end
 
 def Submissions.render_data(sub)
 	table = "<TR class=\"data\">"
-	table += "<TD class=\"article\"><A href=\"/submission?user=#{URI.encode(sub['user'])}&article=#{URI.encode(sub['article'])}\">#{sub['article']}</A></TD>"
-	table += "<TD class=\"user\"><A href=\"/profile?user=#{URI.encode(sub['user'])}\">#{sub['user']}</A></TD>"
+	table += "<TD class=\"article\"><A href=\"/article?user=#{CGI.escape(sub['user'])}&article=#{CGI.escape(sub['article'])}\">#{sub['article']}</A></TD>"
+	table += "<TD class=\"user\"><A href=\"/profile?user=#{CGI.escape(sub['user'])}\">#{sub['user']}</A></TD>"
 	table += "<TD class=\"added\">#{Time.at(sub['added']).strftime("%d-%m-%Y %T")}</TD>"
 	table += "<TD class=\"updated\">#{Time.at(sub['updated']).strftime("%d-%m-%Y %T")}</TD>"
 	table += "<TD class=\"buzz\">#{sub['buzz']}</TD>"

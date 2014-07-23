@@ -3,8 +3,8 @@
 class Login
 
 def Login.render(params)
-	email = URI.decode(params[:email])
-	key = URI.decode(params[:key])
+	email = CGI.unescape(params[:email])
+	key = CGI.unescape(params[:key])
 
 	prompt = "Login: User \"#{email}\" could not be logged in."
 	
@@ -16,7 +16,7 @@ def Login.render(params)
 	meta = ""
 	if user and user.newkey == key then
 		user.login
-		prompt = "Success! You're now logged in... Champ."
+		prompt = "<IMG src=\"throbber.gif\"> Success! You're now logged in... Champ."
 		if user.pseudonym == "" then meta = meta_refresh(2, "/page?src=register")
 		else meta = meta_refresh(2, "/page?src=about") end
 	end

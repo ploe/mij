@@ -14,7 +14,7 @@ def render(params, user)
 	if (not params[:email]) then return ["Keygen: No email input"] end
 
 	email = {
-		'to'  => URI.decode(params[:email]),
+		'to'  => CGI.unescape(params[:email]),
 		'subject' => "ploe.co.uk - Login Key",
 
 	}

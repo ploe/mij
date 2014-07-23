@@ -20,8 +20,8 @@ def get_paths(params)
 	if (not params[:topic]) then err.push("Topic: No topic specified") end
 	if (err.length > 0) then return err end
 
-	board = URI.decode(params[:board])
-	topic = URI.decode(params[:topic])
+	board = CGI.unescape(params[:board])
+	topic = CGI.unescape(params[:topic])
 
 	# Build the literal paths up
 	path = {
