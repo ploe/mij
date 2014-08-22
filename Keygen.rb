@@ -1,6 +1,6 @@
 #! /usr/bin/ruby
 
-class Keygen
+module Keygen
 
 require 'json'
 require 'securerandom'
@@ -10,7 +10,7 @@ require '../Emailer.rb'
 
 require './User.rb'
 
-def render(params, user)
+def Keygen.render(params)
 	if (not params[:email]) then return ["Keygen: No email input"] end
 
 	email = {
@@ -24,7 +24,7 @@ def render(params, user)
 
 	# Creates new session key	
 	sha = Digest::SHA2.new(512) << SecureRandom.uuid << email['to']
-	email['url'] = "https://ploe.co.uk/login?email=" + email['to'] + "&key=" +  sha.to_s
+	email['url'] = "https://#{params[:domain]}/login?email=" + email['to'] + "&key=" +  sha.to_s
 
 	File.open(path + "/newkey", 'w') { |file|
 		file.write(sha.to_s)	

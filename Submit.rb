@@ -5,10 +5,10 @@
 # It uses the resource form.html as its template page
 module Submit
 
-def Submit.render(tatl)
+def Submit.render(params)
 	madlib File.read("res/form.html"), {
 		'prompt' => prompt,
-		'tatl' => tatl,
+		'tatl' => params[:tatl],
 		'title' => 'submit',
 		'title-input' => "<P><INPUT type=\"text\" name=\"article[title]\" id=\"title\" placeholder=\"Title\"></P>\n",
 		'verbs' => 

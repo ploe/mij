@@ -2,7 +2,7 @@
 
 module Critique
 
-def Critique.render(params, tatl)
+def Critique.render(params)
 	user = CGI.unescape(params[:user])
 	article = CGI.unescape(params[:article])
 
@@ -11,7 +11,7 @@ def Critique.render(params, tatl)
 	if article['exists?'] then
 		madlib File.read("./res/form.html"), {
 			'prompt' => "What do you reckon...?",
-			'tatl' => tatl,
+			'tatl' => params[:tatl],
 			'title' => "critique #{article['html-title'].downcase} by #{article['html-user'].downcase}",
 			'title-input' =>  
 				"<P>#{article['html-title']} by #{article['html-user']}</P>" +
@@ -27,10 +27,11 @@ def Critique.render(params, tatl)
 	end
 end
 
-def Critique.post(params, client)
+def Critique.post(params)
+	client = params[:client]
 	article = params[:article]
 	madlibs = {}
-	madlibs['meta'] = meta_refresh(3, "/article?user=#{article[:user]}&article=#{article[:title]}")
+	madlibs['meta'] = meta_refresh(4, "/article?user=#{article[:user]}&article=#{article[:title]}")
 
 	if (not client) then
 		 madlibs['content'] = "<IMG src=\"throbber.gif\"> Critique: You're not allowed to post."

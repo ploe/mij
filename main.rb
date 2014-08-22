@@ -27,11 +27,17 @@ def get_user(request)
 	user
 end
 
+before do
+	params[:domain] = request.host_with_port
+	params[:client] = get_user(request)
+	params[:tatl] = Tatl.render(params[:client])
+end
+
 get '/page' do
 	src = "./public/" + params[:src] + ".html"
 	if File.exists?(src) and (content = File.read(src)) then
 		madlib(content, {
-			'tatl' => Tatl.render(get_user(request)),
+			'tatl' => params[:tatl],
 			'title' => params[:src]
 		})
 	end
@@ -56,20 +62,18 @@ get '/login' do
 end
 
 get '/logout' do
-	user = get_user(request)
-	if user then user.logout end
+	if params[:client] then params[:client].logout end
 	redirect to('/page?src=about')	
 end
 
 get '/submissions' do
-	Submissions.render(params, Tatl.render(get_user(request)))
+	Submissions.render(params)
 end
 
 get '/submit' do
-	user = get_user(request)
-	if user and user.pseudonym != "" then
-		Submit.render(Tatl.render(get_user(request)))
-	elsif user
+	if params[:client] and params[:client].pseudonym != "" then
+		Submit.render(params)
+	elsif params[:client]
 		redirect to("/page?src=register")
 	else	
 		redirect to("/page?src=about")
@@ -77,42 +81,30 @@ get '/submit' do
 end
 
 get '/article' do
-	Article.render(params, get_user(request))
+	Article.render(params)
 end
 
 get '/critique' do
-	Critique.render(params, Tatl.render(get_user(request)))
+	Critique.render(params)
 end
 
 get '/' do
-	BoardIndex.new.render(nil)	
-end
-
-# A topic is an individual thread on a board. A topic is essentially a 
-# nest of posts in a directory
-get '/topic' do
-	res, err = Topic.new.render(params)
+	redirect to("/page?src=about")	
 end
 
 post '/critique' do
-	Critique.post(params, get_user(request))	
+	Critique.post(params)	
 end
 
 post '/post' do
-	user = get_user(request)
-	Post.render(params, user)
-end
-
-post '/preview' do
-	Preview.new.render(params[:article])
+	Post.render(params)
 end
 
 post '/register' do
-	user = get_user(request)
-	user.set_pseudonym(params[:pseudonym])
+	params[:client].set_pseudonym(params[:pseudonym])
 end
 
 post '/keygen' do	
-	Keygen.new.render(params, get_user(request))
+	Keygen.render(params)
 	redirect to("/page?src=about")
 end

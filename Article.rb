@@ -2,7 +2,8 @@
 
 module Article
 
-def Article.render(params, client)
+def Article.render(params)
+	client = params[:client]
 	article = CGI.unescape(params[:article])
 	user = CGI.unescape(params[:user])
 
@@ -13,7 +14,7 @@ def Article.render(params, client)
 		'content' => content,
 		'meta' => meta,
 		'title' => "#{CGI.escapeHTML(article)} by #{CGI.escapeHTML(user)}",
-		'tatl' => Tatl.render(client),
+		'tatl' => params[:tatl],
 	}
 end
 
@@ -23,7 +24,7 @@ def Article.render_submission(user, article, client)
 
 	if article['body'] == nil then
 		content = article.to_s + "<DIV class=\"content\"><IMG src=\"/throbber.gif\"> Article: I'm afraid \"#{article['html-title']}\" by #{article['html-user']} doesn't exist. Soz, pal!</DIV>"
-		meta = meta_refresh(3, "/page?src=about")
+		meta = meta_refresh(4, "/page?src=about")
 	else
 		content = 
 			"<DIV class=\"content\">\n" +

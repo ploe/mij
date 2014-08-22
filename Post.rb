@@ -6,23 +6,24 @@ module Post
 
 require "./mij.rb"
 
-def Post.render(params, user)
+def Post.render(params)
+	client = params[:client]
 	article = params[:article]
 	prompt = "Post: User not logged in. Wait... wot?"
-	if user then
-		prompt = user.post(CGI.unescape(article['title']), CGI.unescape(article['body']))
+	if client then
+		prompt = client.post(CGI.unescape(article['title']), CGI.unescape(article['body']))
 	end
 
 	meta = ""
 	if prompt =~ /Success/i then
-		meta = meta_refresh(2, "/article?user=#{CGI.escape(user.pseudonym)}&article=#{CGI.escape(article['title'])}")
+		meta = meta_refresh(4, "/article?user=#{CGI.escape(client.pseudonym)}&article=#{CGI.escape(article['title'])}")
 		prompt = "<IMG src=\"/throbber.gif\"> " + prompt
 	end
 
 	madlib File.read("res/bare.html"), {
 		'content' => "<DIV class=\"content\"><P>#{prompt}</P></DIV><BR>",
 		'meta' => meta,
-		'tatl' => Tatl.render(user),
+		'tatl' => params[:tatl],
 		'title' => prompt,
 	}
 end

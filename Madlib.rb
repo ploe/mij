@@ -17,5 +17,5 @@ end
 
 # meta_refresh is used to do generate a meta tag to autorefresh the page
 def meta_refresh(duration, uri)
-	"<meta http-equiv=\"refresh\"content=\"#{duration}; url=http://ploe.co.uk#{uri}\" >"
+	"<meta http-equiv=\"refresh\"content=\"#{duration}; url=#{uri}\" >"
 end

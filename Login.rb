@@ -17,8 +17,8 @@ def Login.render(params)
 	if user and user.newkey == key then
 		user.login
 		prompt = "<IMG src=\"throbber.gif\"> Success! You're now logged in... Champ."
-		if user.pseudonym == "" then meta = meta_refresh(2, "/page?src=register")
-		else meta = meta_refresh(2, "/page?src=about") end
+		if user.pseudonym == "" then meta = meta_refresh(4, "/page?src=register")
+		else meta = meta_refresh(4, "/page?src=about") end
 	end
 
 	tatl = Tatl.render(user)

@@ -2,7 +2,7 @@
 
 module Submissions
 
-def Submissions.render(params, tatl)
+def Submissions.render(params)
 	path = "/mij/submissions/"
 	submissions = []
 	Dir.foreach(path) do |user|
@@ -32,7 +32,7 @@ def Submissions.render(params, tatl)
 	if order == "des" then submissions.reverse! end
 
 	madlib(File.read("res/bare.html"), {
-		'tatl' => tatl,
+		'tatl' => params[:tatl],
 		'title' => "submissions",
 		'content' => "<DIV class=\"content\">\n" + render_list(submissions, params) + "</DIV><BR>\n",
 	})
