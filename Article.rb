@@ -29,14 +29,13 @@ def Article.render_submission(user, article, client)
 			"<DIV class=\"content\">\n" +
 			"<DIV class=\"chunk\">" +
 			"<STRONG>#{article['html-title']}</STRONG>" +
-			"by <A href=\"/profile?user=#{article['cgi-user']}\">#{article['html-user']}</A>" +
+			" by <A href=\"/profile?user=#{article['cgi-user']}\">#{article['html-user']}</A>" +
 			"</DIV>\n" +
 			"<DIV class=\"chunk\">\n#{article['body']}\n</DIV><BR>\n" +
 			render_verbs(article, client) +
 			"</DIV><BR>\n" +
 
 			render_critiques(article['critiques'])
-
 	end
 
 	return content, meta

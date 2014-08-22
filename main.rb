@@ -94,6 +94,10 @@ get '/topic' do
 	res, err = Topic.new.render(params)
 end
 
+post '/critique' do
+	Critique.post(params, get_user(request))	
+end
+
 post '/post' do
 	user = get_user(request)
 	Post.render(params, user)

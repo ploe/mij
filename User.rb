@@ -64,7 +64,6 @@ end
 
 # Submits a submission, there is a 1 million char limit for reasons.
 def post(title, body)
-	body.gsub!(/<.*?>/, "")
 	post = path + "/posts/" + CGI.escape(title)
 	if title == "" then
 		return "User: Huh? You forgot the title for your submission."
@@ -78,10 +77,35 @@ def post(title, body)
 
 	Dir.mkdir(post)
 	File.open(post + "/#{@pseudonym}", "w") do |file|
-		file.write(body)
+		file.write(CGI.escapeHTML(body))
 	end
 
 	"Success! \"#{title}\" was uploaded."
+end
+
+def critique(user, title, body)
+	article = User.fetch_article(user, title, false)
+	path = article['path'] + CGI.escape(@pseudonym)
+
+	# Some strings return 'Success!' - even though not technically being successful so the calling process can render a meta_refresh
+	if not article['exists?'] then
+		$stderr.puts "Does not exist: " + article['path']
+		return "User: Say buddy, the article \"#{article['html-title']}\" by \"#{article['html-user']}\" which you're trying to critique does not exist. Weird...!"
+	elsif @pseudonym == user then
+		return "User: Dude, \"#{article['html-title']}\" is your own article. You know what they say about self praise, right? (Proverbs 27:2)<!-- Success! -->"
+	elsif File.exists?(path) then
+		return "User: You've already critiqued the article  \"#{article['html-title']}\" by \"#{article['html-user']}\". Pipe down!<!-- Success! -->"
+	elsif body == "" then
+		return "User: Hey! Your body is missing."
+	elsif body.length > 1000000 then
+		return "User: Critique exceeds a million characters. Edit?" 
+	end
+
+	File.open(path, "w") do |file|
+		file.write(CGI.escapeHTML(body))
+	end
+
+	"Success! Criticism submitted on \"#{article['html-title']}\" by \"#{article['html-user']}\" - Gratz!"
 end
 
 def set_pseudonym(str)
