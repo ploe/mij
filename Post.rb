@@ -22,6 +22,8 @@ def Post.render(params)
 
 	madlib File.read("res/bare.html"), {
 		'content' => "<DIV class=\"content\"><P>#{prompt}</P></DIV><BR>",
+		'domain' => params[:domain],
+		'favicon' => params[:favicon],
 		'meta' => meta,
 		'tatl' => params[:tatl],
 		'title' => prompt,

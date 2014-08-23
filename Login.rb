@@ -25,6 +25,7 @@ def Login.render(params)
 
 	madlib File.read("res/bare.html"), {
 		'content' => "<DIV class=\"content\">#{prompt}</DIV><BR>",
+		'domain' => params[:domain],
 		'meta' => meta,
 		'tatl' => tatl,
 		'title' => "logging in",

@@ -29,6 +29,12 @@ end
 
 before do
 	params[:domain] = request.host_with_port
+
+	params[:favicon] = "dev-favicon.ico"
+	if params[:domain] == "ploe.co.uk" then
+		params[:favicon].sub!(/dev/, "live")
+	end
+
 	params[:client] = get_user(request)
 	params[:tatl] = Tatl.render(params[:client])
 end
@@ -37,6 +43,8 @@ get '/page' do
 	src = "./public/" + params[:src] + ".html"
 	if File.exists?(src) and (content = File.read(src)) then
 		madlib(content, {
+			'domain' => params[:domain],
+			'favicon' => params[:favicon],
 			'tatl' => params[:tatl],
 			'title' => params[:src]
 		})

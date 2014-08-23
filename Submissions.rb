@@ -32,6 +32,8 @@ def Submissions.render(params)
 	if order == "des" then submissions.reverse! end
 
 	madlib(File.read("res/bare.html"), {
+		'domain' => params[:domain],
+		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],
 		'title' => "submissions",
 		'content' => "<DIV class=\"content\">\n" + render_list(submissions, params) + "</DIV><BR>\n",

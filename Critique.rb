@@ -10,6 +10,8 @@ def Critique.render(params)
 
 	if article['exists?'] then
 		madlib File.read("./res/form.html"), {
+			'domain' => params[:domain],
+			'favicon' => params[:favicon],
 			'prompt' => "What do you reckon...?",
 			'tatl' => params[:tatl],
 			'title' => "critique #{article['html-title'].downcase} by #{article['html-user'].downcase}",
@@ -19,7 +21,7 @@ def Critique.render(params)
 				"<INPUT type=\"hidden\" name=\"article[user]\" value=\"#{article['cgi-user']}\">",
 			'verbs' => 
 				"<DIV class=\"verbs\">\n" +
-				"<BUTTON formmethod=\"post\" id=\"preview\" formaction=\"./critique\">Critique</BUTTON>\n" +
+				"<BUTTON formmethod=\"post\" id=\"critique\" formaction=\"./critique\">critique</BUTTON>\n" +
 				"</DIV>"
 		}
 	else
@@ -30,7 +32,10 @@ end
 def Critique.post(params)
 	client = params[:client]
 	article = params[:article]
+
 	madlibs = {}
+	madlibs['favicon'] = params[:favicon]
+
 	madlibs['meta'] = meta_refresh(4, "/article?user=#{article[:user]}&article=#{article[:title]}")
 
 	if (not client) then
