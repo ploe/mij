@@ -13,6 +13,7 @@ def Article.render(params)
 	madlib File.read("res/bare.html"), {
 		'content' => content,
 		'domain' => params[:domain],
+		'favicon' => params[:favicon],
 		'meta' => meta,
 		'title' => "#{CGI.escapeHTML(article)} by #{CGI.escapeHTML(user)}",
 		'tatl' => params[:tatl],
