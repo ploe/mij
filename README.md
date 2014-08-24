@@ -2,9 +2,7 @@
 
 mij is a communal blogging platform, with a few editorial features. It is for my vanity project 'ploe.co.uk' - which is supposed to be a creative writing site.
 
-As a platform you are free to remix and rejigger it. Feel free! Contribute features and bug fixes too. You never know what I might like.
-
-The site is artwork as well as the work that gets featured there, it'd be nice to see the fingerprints of folk all over it. S'your call!
+As a platform you are free to remix and rejigger it. Feel free! Contribute features and bug fixes too. You never know what I might like. The site is artwork as well as the work that gets featured there, it'd be nice to see the fingerprints of folk all over it. S'your call!
 
 ## Features
 
@@ -18,7 +16,16 @@ The site is artwork as well as the work that gets featured there, it'd be nice t
 
 mij is currently under active Development, it isn't finished and I'm open to features and bug fixes.
 
-If you want a fresh version of the site to play with you can get the Docker image here.
+If you want a fresh version of the site to play with [you can get the Docker image here](https://registry.hub.docker.com/u/ploe/mij/).
+
+You can also get it up and running be doing the following commands from the shell:
+
+```bash
+docker pull ploe/mij
+docker run -p 8989:8989 -ti ploe/mij /bin/sh -c 'cd /mij/src; ./main.rb'
+```
+
+Then if you head on over to port 8989 on your localhost, or Docker VM, you will see your version of the site all virginal and ready to exploit. Tuck in sailor...
 
 ## License
 
