@@ -1,6 +1,7 @@
 require './Article.rb'
 require './Critique.rb'
 require '../Emailer.rb'
+require './Feature.rb'
 require './Keygen.rb'
 require './Login.rb'
 require './Madlib.rb'

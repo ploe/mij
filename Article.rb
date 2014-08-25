@@ -51,19 +51,19 @@ end
 def Article.render_verbs(article, client)
 	content = ""
 	if client and client.authentic then
-		content = "<DIV class=\"verbs\">\n"
-		content += 
-			"<FORM>\n" +
-			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['title']}\">\n" +
+		content = 
+			"<DIV class=\"verbs\">\n<FORM>\n" +
 			"<INPUT type=\"hidden\" name=\"user\" value=\"#{article['html-user']}\">\n" +
-			"<BUTTON id=\"critique\" formaction=\"/critique\" formmethod=\"get\">critique</BUTTON>\n"
+			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['title']}\">\n"
 
 		if client.perks['editor'] then 
-			content += " <BUTTON>feature</BUTTON>"
+			content += " <BUTTON  id=\"feature\" formaction=\"/feature\" formmethod=\"get\">feature</BUTTON>\n"
 		end
 
+		content += "<BUTTON id=\"critique\" formaction=\"/critique\" formmethod=\"get\">critique</BUTTON>\n"
+
 		if client.perks['janitor'] or client.perks['editor'] then
-			content += " <BUTTON>remove</BUTTON>" 
+			content += " <BUTTON id=\"feature\" formaction=\"/feature\" formmethod=\"post\">flag user</BUTTON>" 
 		end
 
 		content += "</DIV><DIV style=\"clear: both\"></DIV></FORM>\n"

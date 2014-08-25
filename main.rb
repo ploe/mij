@@ -127,6 +127,10 @@ get '/' do
 	redirect to("/page?src=about")	
 end
 
+get '/feature' do
+	Feature.get(params)
+end
+
 post '/critique' do
 	Critique.post(params)	
 end
