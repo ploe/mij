@@ -139,6 +139,10 @@ post '/post' do
 	Post.render(params)
 end
 
+post '/feature' do
+	Feature.post(params)
+end
+
 post '/register' do
 	params[:client].set_pseudonym(params[:pseudonym])
 end

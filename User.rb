@@ -67,7 +67,7 @@ def post(title, body)
 	post = path + "/posts/" + CGI.escape(title)
 	if title == "" then
 		return "User: Huh? You forgot the title for your submission."
-	elsif File.exists?(post)
+	elsif User.fetch_article(@pseudonym, CGI.escape(title))['exists?'] then
 		return "User: Submission named \"#{title}\" already exists. Damnit!"
 	elsif body == "" then
 		return "User: No text in your submission. Well...!"
@@ -125,7 +125,6 @@ def set_pseudonym(str)
 
 	FileUtils.symlink(path, dst)
 	FileUtils.symlink(path + "/posts", "/mij/submissions/" + str)	
-	FileUtils.symlink(path + "/featured", "/mij/featured/" + str)	
 
 	File.open(path + "/pseudonym", "w") do |file|
 		file.write(str)
@@ -150,6 +149,21 @@ def User.register(email)
 
 end
 
+def User.feature(user, article)
+	user = CGI.escape(user)
+	article = CGI.escape(article)
+	FileUtils.mv(
+		"/mij/pseudonym/#{user}/posts/#{article}", 
+		"/mij/pseudonym//#{user}/featured/#{article}"
+	)
+
+	FileUtils.symlink(
+		"/mij/pseudonym//#{user}/featured",
+		"/mij/featured/#{user}",
+		:force => true
+	)
+end
+
 #	builds up an article hash, last param turns off trying to eat the 
 #	content.
 def User.fetch_article(user, article, getcontent=true)
@@ -165,6 +179,11 @@ def User.fetch_article(user, article, getcontent=true)
 
 	article['path'] = "/mij/pseudonym/#{article['cgi-user']}/posts/#{article['cgi-title']}/"
 	article['exists?'] = File.exists?(article['path'])
+
+	if not article['exists?'] then
+		article['path'].sub!(/\/posts\//, "\/featured\/")
+		article['exists?'] = File.exists?(article['path'])
+	end
 
 	if getcontent and article['exists?'] then
 		article['added'] = File.mtime(article['path']).to_i
@@ -201,13 +220,11 @@ def User.fetch_critiques(article)
 end
 
 def User.count_buzz(user, article)
-	article = CGI.escape(article)
-	user = CGI.escape(user)
-
-	path = "/mij/submissions/#{user}/#{article}"
+	path = fetch_article(user, article)['path']
 	count = -1
+
 	Dir.foreach(path) do |file|
-		if file =~ /^\./ then next end
+		if (file == '.') or (file == '..') then next end
 		count += 1
 	end
 

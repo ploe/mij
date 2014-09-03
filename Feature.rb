@@ -2,12 +2,11 @@
 
 module Feature
 
-def Feature.render(params)
-
-end
-
 def Feature.post(params)
+	user = escape_param(params[:user])
+	article = escape_param(params[:article])
 
+	User.feature(user['text'], article['text'])
 end
 
 def Feature.get(params)
@@ -22,7 +21,7 @@ def Feature.get(params)
 		'title' => "feature #{article['html']} by #{user['html']}?",
 	
 		'maru' => "<BUTTON id=\"maru\" formaction=\"/feature\" formmethod=\"post\">for real</BUTTON>",
-		'batsu' => "<BUTTON id=\"maru\" formaction=\"/article\" formmethod=\"get\">hell no</BUTTON>",
+		'batsu' => "<BUTTON id=\"batsu\" formaction=\"/article\" formmethod=\"get\">hell no</BUTTON>",
 		'hidden' => 
 			"<INPUT type=\"hidden\" name=\"user\" value=\"#{user['cgi']}\">\n" +
 			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['cgi']}\">",
