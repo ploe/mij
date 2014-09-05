@@ -20,12 +20,16 @@ If you want a fresh version of the site to play with [you can get the Docker ima
 
 You can also get it up and running be doing the following commands from the shell:
 
-```bash
+```
 docker pull ploe/mij
 docker run -p 8989:8989 -ti ploe/mij /bin/sh -c 'cd /mij/src; ./main.rb'
 ```
 
 Then if you head on over to port 8989 on your localhost, or Docker VM, you will see your version of the site all virginal and ready to exploit. Tuck in sailor...
+
+When logging in on the Docker image the email with the login key is only dumped to stderr, and isn't sent for real. You should copy the URL from there and drop it in to your browser.
+
+You may also need to amend the protocol in the URL from HTTPS to HTTP.
 
 ## License
 
