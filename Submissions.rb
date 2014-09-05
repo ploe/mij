@@ -6,10 +6,10 @@ def Submissions.render(params)
 	path = "/mij/submissions/"
 	submissions = []
 	Dir.foreach(path) do |user|
-		if user =~ /^\./ then next end
+		if (user == "..") or (user == ".") then next end
 
 		Dir.foreach(path + user) do |article|
-			if article =~ /^\./ then next end
+			if (article == "..") or (article == ".") then next end
 			article = CGI.unescape(article)
 			sub = {
 				'user' => user,

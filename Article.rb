@@ -56,11 +56,14 @@ def Article.render_verbs(article, client)
 			"<INPUT type=\"hidden\" name=\"user\" value=\"#{article['html-user']}\">\n" +
 			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['title']}\">\n"
 
-		if client.perks['editor'] and (article['path'] !~ /featured/) then 
-			content += " <BUTTON  id=\"feature\" formaction=\"/feature\" formmethod=\"get\">feature</BUTTON>\n"
-		end
+		if article['path'] !~ /featured/ then
+			if client.perks['editor'] then 
+				content += " <BUTTON  id=\"feature\" formaction=\"/feature\" formmethod=\"get\">feature</BUTTON>\n"
+			end
 
-		content += "<BUTTON id=\"critique\" formaction=\"/critique\" formmethod=\"get\">critique</BUTTON>\n"
+			content += "<BUTTON id=\"critique\" formaction=\"/critique\" formmethod=\"get\">critique</BUTTON>\n"
+
+		end
 
 		if client.perks['janitor'] or client.perks['editor'] then
 			content += " <BUTTON id=\"feature\" formaction=\"/feature\" formmethod=\"post\">flag user</BUTTON>" 

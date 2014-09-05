@@ -125,6 +125,7 @@ def set_pseudonym(str)
 
 	FileUtils.symlink(path, dst)
 	FileUtils.symlink(path + "/posts", "/mij/submissions/" + str)	
+	FileUtils.symlink(path + "/featured", "/mij/featured/" + str)	
 
 	File.open(path + "/pseudonym", "w") do |file|
 		file.write(str)
@@ -155,12 +156,6 @@ def User.feature(user, article)
 	FileUtils.mv(
 		"/mij/pseudonym/#{user}/posts/#{article}", 
 		"/mij/pseudonym//#{user}/featured/#{article}"
-	)
-
-	FileUtils.symlink(
-		"/mij/pseudonym//#{user}/featured",
-		"/mij/featured/#{user}",
-		:force => true
 	)
 end
 

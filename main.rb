@@ -127,6 +127,10 @@ get '/' do
 	redirect to("/page?src=about")	
 end
 
+get '/zine' do
+	Zine.get(params)
+end
+
 get '/feature' do
 	Feature.get(params)
 end
@@ -141,6 +145,7 @@ end
 
 post '/feature' do
 	Feature.post(params)
+	redirect to("/zine")	
 end
 
 post '/register' do

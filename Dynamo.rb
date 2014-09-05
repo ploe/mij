@@ -19,6 +19,26 @@ def append(params)
 	@value
 end
 
+def a_href(content, href)
+	append({
+		'tag' => "A",
+		'content' => content,
+		'attributes' => {
+			'href' => href,
+		}
+	})
+end
+
+def clear_float
+	append({
+                'tag' => "DIV",
+                'content' => "",
+                'attributes' => {
+                        'style' => "clear: both",
+                }
+        })
+end
+
 def to_s
 	return @value
 end
@@ -57,7 +77,7 @@ def render_hash(params)
 
 	if (params['tag'] != nil) and (params['content'] != nil) then @value += "</#{params['tag']}>" end
 
-	@value += "\n"
+	if params['newline'] then @value += "\n" end
 end
 
 end

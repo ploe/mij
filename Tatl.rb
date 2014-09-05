@@ -17,7 +17,7 @@ def Tatl.logged_in(user)
 <<NAVBAR_IN
 <BR>
 <DIV class="stuffcontainer" align="right">
-<SPAN class="userstuff">featured</SPAN> 
+<SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
 <SPAN class="userstuff"><A href="/submit">submit</A></SPAN>  
 <SPAN class="userstuff"><A href=\"/submissions\">submissions</A></SPAN> 
 <SPAN class="userstuff">#{user.downcase}</SPAN> 
@@ -34,7 +34,7 @@ def Tatl.logged_out
 <<NAVBAR_OUT
 <BR>
 <DIV class="stuffcontainer" align="right">
-<SPAN class="userstuff">featured</SPAN> 
+<SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
 <SPAN class="userstuff"><A href=\"/submissions\">submissions</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=about">about</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=login">login</A></SPAN>
