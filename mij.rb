@@ -1,5 +1,6 @@
 require './Article.rb'
 require './Critique.rb'
+require './Dynamo.rb'
 require '../Emailer.rb'
 require './Feature.rb'
 require './Keygen.rb'
