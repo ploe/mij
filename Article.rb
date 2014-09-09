@@ -28,16 +28,16 @@ def Article.render_submission(user, article, client)
 		content = article.to_s + "<DIV class=\"content\"><IMG src=\"/throbber.gif\"> Article: I'm afraid \"#{article['html-title']}\" by #{article['html-user']} doesn't exist. Soz, pal!</DIV>"
 		meta = meta_refresh(4, "/page?src=about")
 	else
+		added = Article.render_date(article['added'])
 		content = 
 			"<DIV class=\"content\">\n" +
 			"<DIV class=\"chunk\">" +
 			"<STRONG>#{article['html-title']}</STRONG>" +
-			" by <A href=\"/profile?user=#{article['cgi-user']}\">#{article['html-user']}</A>" +
+			" by <A href=\"/profile?user=#{article['cgi-user']}\">#{article['html-user']}</A> #{added}" +
 			"</DIV>\n" +
 			"<DIV class=\"chunk\">\n#{article['body']}\n</DIV><BR>\n" +
 			render_verbs(article, client) +
 			"</DIV><BR>\n" +
-
 			render_critiques(article['critiques'])
 	end
 
@@ -45,7 +45,44 @@ def Article.render_submission(user, article, client)
 end
 
 def Article.render_critiques(critiques)
-	"<!--" + critiques.to_s + "-->"	
+	content = ""
+	critiques.each do |c|
+		tmp = Dynamo.new
+	
+		added = Article.render_date(c['added'])	
+		tmp.append({
+			'tag' => "DIV",
+			'content' => "<A href=\"/profile?user=#{c['cgi-user']}\">#{c['html-user']}</A> #{Article.holy_says}... #{added}",
+			'newline' => true,
+		})
+	
+		tmp.append({
+			'tag' => "DIV",
+			'content' => "#{c['critique']}",
+                        'newline' => true,
+			'attributes' => {
+				'class' => 'chunk',
+			}
+		})
+		tmp.append("<BR>\n")
+		content += tmp.to_s
+	end
+
+
+	# Wraps the content up in a content div
+	if content != "" then 
+		content = Dynamo.new.append({
+			'tag' => "DIV",
+                        'content' => content,
+                        'attributes' => {
+                                'class' => 'content',
+                        }
+		})
+
+		content += "<BR>\n"
+	end
+
+	content
 end
 
 def Article.render_verbs(article, client)
@@ -72,6 +109,58 @@ def Article.render_verbs(article, client)
 		content += "</DIV><DIV style=\"clear: both\"></DIV></FORM>\n"
 	end
 	content
+end
+
+def Article.render_date(time)
+	added = Time.at(time).strftime("%d-%m-%Y %T")
+	Dynamo.new.append({
+		'tag' => "SPAN",
+		'content' => "[#{added}]",
+		'attributes' => {
+			'class' => "date"
+		}
+	})
+end
+
+private
+
+def Article.holy_says
+	[
+		"says",
+		"shouts",
+		"whispers",
+		"suggests",
+		"opines",
+		"orates",
+		"soliloquizes",
+		"s-s-s-stutters",
+		"misspels",
+		"reckons",
+		"assumes",
+		"puts out there",
+		"puts forward",
+		"moans that",
+		"coughs up",
+		"spews out",
+		"preaches",
+		"prays",
+		"articulates",
+		"argues",
+		"distills",
+		"demonstrates",
+		"dreams that",
+		"dishes",
+		"doles outs",
+		"might've said",
+		"types",
+		"scribes",
+		"writes",
+		"draws",
+		"summoned",
+		"throws out",
+		"presents",
+		"reveals",
+	].sample
 end
 
 end	

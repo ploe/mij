@@ -9,11 +9,21 @@ end
 # incredibly agnostic html rendering function, give it a raw string or a 
 # hash and watch it work its magic. The idea is the Dynamo is a dynamic 
 # widget on the page.
+def write(params)
+	if params.is_a? String then
+                @value = params
+        elsif params.is_a? Hash then
+                @value = render_hash(params)
+        end
+
+	@value
+end
+
 def append(params)
 	if params.is_a? String then 
 		@value += params
 	elsif params.is_a? Hash then
-		render_hash(params)
+		@value += render_hash(params)
 	end
 
 	@value
@@ -55,8 +65,9 @@ attr_accessor :value
 # string renders as: key="value" e.g. href="/home"
 # true renders as: key e.g. checked
 def render_hash(params)
+	value = ""
 	if params['tag'] then 
-		@value += "<#{params['tag']}{attributes}>"
+		value += "<#{params['tag']}{attributes}>"
 
 		attributes = ""
 		if params['attributes'].is_a? Hash then
@@ -69,15 +80,17 @@ def render_hash(params)
 				end
 			end
 		end
-		@value.sub!(/{attributes}/, attributes)
+		value.sub!(/{attributes}/, attributes)
 	
 	end
 
-	if params['content'] then @value += "#{params['content']}" end
+	if params['content'] then value += "#{params['content']}" end
 
-	if (params['tag'] != nil) and (params['content'] != nil) then @value += "</#{params['tag']}>" end
+	if (params['tag'] != nil) and (params['content'] != nil) then value += "</#{params['tag']}>" end
 
-	if params['newline'] then @value += "\n" end
+	if params['newline'] then value += "\n" end
+
+	value
 end
 
 end

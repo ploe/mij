@@ -127,7 +127,14 @@ get '/' do
 	redirect to("/page?src=about")	
 end
 
+# Zine class is listed as featured on the front page so I have set up
+# routes for both.
+
 get '/zine' do
+	Zine.get(params)
+end
+
+get '/featured' do
 	Zine.get(params)
 end
 

@@ -172,13 +172,7 @@ def User.fetch_article(user, article, getcontent=true)
 		'html-user' => CGI.escapeHTML(user),
 	}
 
-	article['path'] = "/mij/pseudonym/#{article['cgi-user']}/posts/#{article['cgi-title']}/"
-	article['exists?'] = File.exists?(article['path'])
-
-	if not article['exists?'] then
-		article['path'].sub!(/\/posts\//, "\/featured\/")
-		article['exists?'] = File.exists?(article['path'])
-	end
+	article['path'], article['exists?'] = User.article_exists?(article['user'], article['title'])
 
 	if getcontent and article['exists?'] then
 		article['added'] = File.mtime(article['path']).to_i
@@ -192,6 +186,19 @@ def User.fetch_article(user, article, getcontent=true)
 	article
 end
 
+def User.article_exists?(user, article)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/posts/#{CGI.escape(article)}/"
+
+	exists = File.exists?(path)
+
+	if not exists then
+		path.sub!(/\/posts\//, "\/featured\/")
+		exists = File.exists?(path)
+	end
+
+	return path, exists
+end
+
 def User.fetch_critiques(article)
 	critiques = []
 	Dir.foreach(article['path']) do |file|
@@ -201,7 +208,9 @@ def User.fetch_critiques(article)
 
 		fullpath = article['path'] + file 
 		critiques.push ({
-			'user' => file,
+			'user' => CGI.unescape(file),
+			'cgi-user' => file,
+			'html-user' => CGI.escapeHTML(CGI.unescape(file)),
 			'critique' => GitHub::Markdown.render_gfm(File.read(fullpath)),
 			'added' => File.mtime(fullpath).to_i,
 		})
@@ -211,11 +220,11 @@ def User.fetch_critiques(article)
 		c['added']
 	end
 
-	critiques	
+	critiques.reverse!
 end
 
 def User.count_buzz(user, article)
-	path = fetch_article(user, article)['path']
+	path, exists = article_exists?(user, article)
 	count = -1
 
 	Dir.foreach(path) do |file|

@@ -114,3 +114,8 @@ body, button, input, select, textarea {
 .submissionslist .head .article {
 	width: 40%;
 }
+
+.date {
+	color: #444444;
+	font-size: 12px;
+}
