@@ -176,6 +176,7 @@ def User.fetch_article(user, article, getcontent=true)
 
 	if getcontent and article['exists?'] then
 		article['added'] = File.mtime(article['path']).to_i
+		article['buzz'] = User.count_buzz(article['user'], article['title'])
 
 		path = article['path'] + article['cgi-user']
 		article['body'] = GitHub::Markdown.render_gfm(File.read(path))

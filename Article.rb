@@ -31,7 +31,7 @@ def Article.render_submission(user, article, client)
 		added = Article.render_date(article['added'])
 		content = 
 			"<DIV class=\"content\">\n" +
-			"<DIV class=\"chunk\">" +
+			"<DIV>" +
 			"<STRONG>#{article['html-title']}</STRONG>" +
 			" by <A href=\"/profile?user=#{article['cgi-user']}\">#{article['html-user']}</A> #{added}" +
 			"</DIV>\n" +
@@ -52,7 +52,7 @@ def Article.render_critiques(critiques)
 		added = Article.render_date(c['added'])	
 		tmp.append({
 			'tag' => "DIV",
-			'content' => "<A href=\"/profile?user=#{c['cgi-user']}\">#{c['html-user']}</A> #{Article.holy_says}... #{added}",
+			'content' => "<A href=\"/profile?user=#{c['cgi-user']}\">#{c['html-user']}</A> #{Article.holy_says}: #{added}",
 			'newline' => true,
 		})
 	

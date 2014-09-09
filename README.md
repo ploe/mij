@@ -18,7 +18,7 @@ mij is currently under active Development, it isn't finished and I'm open to fea
 
 If you want a fresh version of the site to play with [you can get the Docker image here](https://registry.hub.docker.com/u/ploe/mij/).
 
-You can also get it up and running be doing the following commands from the shell:
+You can also get it up and running by doing the following commands from the shell:
 
 ```
 docker pull ploe/mij
