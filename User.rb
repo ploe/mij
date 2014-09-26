@@ -73,6 +73,8 @@ def post(title, body)
 		return "User: No text in your submission. Well...!"
 	elsif body.length > 1000000 then 
 		return "User: Submission exceeds a million characters. OHMY."
+	elsif User.count_submissions(@pseudonym) >= 5 then
+		return "User: You've already submitted five times. Wait for your work to be featured - or delete some. Your call..."
 	end
 
 	Dir.mkdir(post)
@@ -98,7 +100,7 @@ def critique(user, title, body)
 	elsif body == "" then
 		return "User: Hey! Your body is missing."
 	elsif body.length > 1000000 then
-		return "User: Critique exceeds a million characters. Edit?" 
+		return "User: Critique exceeds a million characters. Edit?"
 	end
 
 	File.open(path, "w") do |file|
@@ -175,7 +177,7 @@ def User.fetch_article(user, article, getcontent=true)
 	article['path'], article['exists?'] = User.article_exists?(article['user'], article['title'])
 
 	if getcontent and article['exists?'] then
-		article['added'] = File.mtime(article['path']).to_i
+		article['added'] = File.mtime(article['path'] + article['cgi-user']).to_i
 		article['buzz'] = User.count_buzz(article['user'], article['title'])
 
 		path = article['path'] + article['cgi-user']
@@ -234,6 +236,18 @@ def User.count_buzz(user, article)
 	end
 
 	count
+end
+
+def User.count_submissions(user)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/posts/"
+	count = 0
+	Dir.foreach(path) do |file|
+		if (file == '.') or (file == '..') then next end
+		count += 1
+	end
+
+	count
+
 end
 
 end

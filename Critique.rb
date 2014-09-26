@@ -36,7 +36,7 @@ def Critique.post(params)
 	madlibs = {}
 	madlibs['favicon'] = params[:favicon]
 
-	madlibs['meta'] = meta_refresh(4, "/article?user=#{article[:user]}&article=#{article[:title]}")
+	madlibs['meta'] = meta_refresh(4, "/article?user=#{article[:user]}&amp;amp;article=#{article[:title]}")
 
 	if (not client) then
 		 madlibs['content'] = "<IMG src=\"throbber.gif\"> Critique: You're not allowed to post."

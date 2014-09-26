@@ -48,16 +48,19 @@ end
 def Zine.render_content(f)
 	content = Dynamo.new
 
-	user = Dynamo.new.a_href(f['html-user'], "/profile?user=#{f['cgi-user']}")
-	article = Dynamo.new.a_href(f['html-title'], "/article?user=#{f['cgi-user']}&article=#{f['cgi-title']}")
-
-	content.append("<DIV class=\"content\">\n")
-	content.append({
-		'tag' => 'DIV',
-		'content' => "<STRONG>#{article}</STRONG> by #{user} #{Zine.render_date(f['added'])}",
-		'newline' => true, 	
+	# heading
+	content.a_href(f['html-title'], "/article", {
+		'user' => "#{f['user']}",
+		'article'=> "#{f['title']}",
 	})
+	content.wrap("STRONG")
+	content.append(" by ")
+	content.a_href(f['html-user'], "/profile", {
+                'user'=> "#{f['user']}",
+        })
+	content.append("#{Zine.render_date(f['added'])}")
 
+	# body
 	content.append({
 		'tag' => 'DIV',
 		'content' => "#{f['body']}",
@@ -67,6 +70,7 @@ def Zine.render_content(f)
                 } 
 	})
 
+	# verbs
 	content.append("<BR>\n")
 	content.append({
                 'tag' => 'DIV',
@@ -78,15 +82,19 @@ def Zine.render_content(f)
 	})
 
 	content.clear_float	
-	content.append("</DIV><BR>\n\n")	
+	content.wrap("DIV", {
+		'class' => 'content'
+	})
+	content.append("<BR>\n\n")
+	content.to_s
 end
 
 def Zine.render_articleurl(f)
 	tmp = Dynamo.new
 	if f['buzz'] == 1 then
-		tmp.a_href("there is #{f['buzz']} critique - #{Zine.holy_peek}?", "/article?user=#{f['cgi-user']}&article=#{f['cgi-title']}")
+		tmp.a_href("there is #{f['buzz']} critique - #{Zine.holy_peek}?", "/article?user=#{f['cgi-user']}&amp;article=#{f['cgi-title']}")
 	elsif f['buzz'] > 1 then 
-		tmp.a_href("there are #{f['buzz']} critiques - #{Zine.holy_peek}?", "/article?user=#{f['cgi-user']}&article=#{f['cgi-title']}")
+		tmp.a_href("there are #{f['buzz']} critiques - #{Zine.holy_peek}?", "/article?user=#{f['cgi-user']}&amp;article=#{f['cgi-title']}")
 	else
 		tmp.append("nope - no critiques")
 	end

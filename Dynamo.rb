@@ -16,7 +16,7 @@ def write(params)
                 @value = render_hash(params)
         end
 
-	@value
+	self
 end
 
 def append(params)
@@ -26,10 +26,31 @@ def append(params)
 		@value += render_hash(params)
 	end
 
-	@value
+	self
 end
 
-def a_href(content, href)
+# wrap takes the existing Dynamo and wraps it with the tag
+def wrap(tag="", attributes=nil)
+	write({
+                'tag' => tag,
+                'content' => to_s,
+                'attributes' => attributes
+        })
+	$stderr.puts "#{tag} => #{to_s}"
+	self
+end
+
+def a_href(content, href, params={})
+	params.keys.each do |k|
+		if href =~ /\?/ then
+			href += "&amp;"
+		else
+			href += "?"
+		end
+
+		href += "#{CGI.escape(k.to_s)}=#{CGI.escape(params[k].to_s)}"
+	end
+
 	append({
 		'tag' => "A",
 		'content' => content,
@@ -37,6 +58,8 @@ def a_href(content, href)
 			'href' => href,
 		}
 	})
+
+	self
 end
 
 def clear_float
@@ -47,6 +70,8 @@ def clear_float
                         'style' => "clear: both",
                 }
         })
+	
+	self
 end
 
 def to_s

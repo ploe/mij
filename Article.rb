@@ -79,10 +79,10 @@ def Article.render_critiques(critiques)
                         }
 		})
 
-		content += "<BR>\n"
+		content.append("<BR>\n")
 	end
 
-	content
+	content.to_s
 end
 
 def Article.render_verbs(article, client)

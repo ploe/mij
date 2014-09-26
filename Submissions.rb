@@ -60,7 +60,7 @@ def Submissions.render_head(params)
 			end
 		end
 		
-		table += "<A href=\"/submissions?sort=#{name}&order=#{tmp}\">#{name.capitalize} #{glyph}</A>"
+		table += "<A href=\"/submissions?sort=#{name}&amp;order=#{tmp}\">#{name.capitalize} #{glyph}</A>"
 		if name == sort then table += "</STRONG>" end
 		table += "</TD>"
 	end
@@ -69,7 +69,7 @@ end
 
 def Submissions.render_data(sub)
 	table = "<TR class=\"data\">"
-	table += "<TD class=\"article\"><A href=\"/article?user=#{CGI.escape(sub['user'])}&article=#{CGI.escape(sub['article'])}\">#{sub['article']}</A></TD>"
+	table += "<TD class=\"article\"><A href=\"/article?user=#{CGI.escape(sub['user'])}&amp;article=#{CGI.escape(sub['article'])}\">#{sub['article']}</A></TD>"
 	table += "<TD class=\"user\"><A href=\"/profile?user=#{CGI.escape(sub['user'])}\">#{sub['user']}</A></TD>"
 	table += "<TD class=\"added\">#{Time.at(sub['added']).strftime("%d-%m-%Y %T")}</TD>"
 	table += "<TD class=\"updated\">#{Time.at(sub['updated']).strftime("%d-%m-%Y %T")}</TD>"

@@ -24,7 +24,7 @@ def Keygen.render(params)
 
 	# Creates new session key	
 	sha = Digest::SHA2.new(512) << SecureRandom.uuid << email['to']
-	email['url'] = "https://#{params[:domain]}/login?email=" + email['to'] + "&key=" +  sha.to_s
+	email['url'] = "https://#{params[:domain]}/login?email=" + email['to'] + "&amp;key=" +  sha.to_s
 
 	File.open(path + "/newkey", 'w') { |file|
 		file.write(sha.to_s)	

@@ -16,7 +16,7 @@ def Feature.get(params)
 	madlib File.read('res/confirmation.html'), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
-		'prompt' => "feature <A href=\"/article?user=#{user['cgi']}&article=#{article['cgi']}\">#{article['html']}</A> by <A href=\"/profile?user=#{user['cgi']}\">#{user['html']}</A> - ey?",
+		'prompt' => "feature <A href=\"/article?user=#{user['cgi']}&amp;article=#{article['cgi']}\">#{article['html']}</A> by <A href=\"/profile?user=#{user['cgi']}\">#{user['html']}</A> - ey?",
 		'tatl' => params[:tatl],
 		'title' => "feature #{article['html']} by #{user['html']}?",
 	
