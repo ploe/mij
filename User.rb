@@ -91,7 +91,6 @@ def critique(user, title, body)
 
 	# Some strings return 'Success!' - even though not technically being successful so the calling process can render a meta_refresh
 	if not article['exists?'] then
-		$stderr.puts "Does not exist: " + article['path']
 		return "User: Say buddy, the article \"#{article['html-title']}\" by \"#{article['html-user']}\" which you're trying to critique does not exist. Weird...!"
 	elsif @pseudonym == user then
 		return "User: Dude, \"#{article['html-title']}\" is your own article. You know what they say about self praise, right? (Proverbs 27:2)<!-- Success! -->"
@@ -176,15 +175,25 @@ def User.fetch_article(user, article, getcontent=true)
 
 	article['path'], article['exists?'] = User.article_exists?(article['user'], article['title'])
 
-	if getcontent and article['exists?'] then
-		article['added'] = File.mtime(article['path'] + article['cgi-user']).to_i
-		article['buzz'] = User.count_buzz(article['user'], article['title'])
+	if article['exists?'] then 
+		article = User.fetch_articlestats(article)
 
-		path = article['path'] + article['cgi-user']
-		article['body'] = GitHub::Markdown.render_gfm(File.read(path))
-		article['updated'] = File.mtime(path).to_i
-		article['critiques'] = fetch_critiques(article)
+		if getcontent then
+			path = article['path'] + article['cgi-user']
+			article['body'] = GitHub::Markdown.render_gfm(File.read(path))
+		end
 	end
+
+	article
+end
+
+def User.fetch_articlestats(article)
+	article['added'] = File.mtime(article['path'] + article['cgi-user']).to_i
+	article['buzz'] = User.count_buzz(article['user'], article['title'])
+
+	path = article['path'] + article['cgi-user']
+	article['updated'] = File.mtime(path).to_i
+	article['critiques'] = fetch_critiques(article)
 
 	article
 end
@@ -200,6 +209,30 @@ def User.article_exists?(user, article)
 	end
 
 	return path, exists
+end
+
+def User.fetch_submissions(user)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/posts/"
+	submissions = []
+	Dir.foreach(path) do |file|
+		if (file == "..") or (file == ".") then next end
+		submissions.push(User.fetch_article(user, CGI.unescape(file)))
+	end
+
+	submissions
+end
+
+# just duplicated fetch submissions - you never know when you might want
+# to do something special... Nah just lazy, really.
+def User.fetch_featured(user)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/featured/"
+	submissions = []
+	Dir.foreach(path) do |file|
+		if (file == "..") or (file == ".") then next end
+		submissions.push(User.fetch_article(user, CGI.unescape(file)))
+	end
+
+	submissions
 end
 
 def User.fetch_critiques(article)
@@ -249,5 +282,17 @@ def User.count_submissions(user)
 	count
 
 end
+
+def User.count_featured(user)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/featured/"
+	count = 0
+	Dir.foreach(path) do |file|
+		if (file == '.') or (file == '..') then next end
+		count += 1
+	end
+
+	count
+end
+
 
 end

@@ -36,20 +36,11 @@ def wrap(tag="", attributes=nil)
                 'content' => to_s,
                 'attributes' => attributes
         })
-	$stderr.puts "#{tag} => #{to_s}"
 	self
 end
 
 def a_href(content, href, params={})
-	params.keys.each do |k|
-		if href =~ /\?/ then
-			href += "&amp;"
-		else
-			href += "?"
-		end
-
-		href += "#{CGI.escape(k.to_s)}=#{CGI.escape(params[k].to_s)}"
-	end
+	href = Dynamo.href(href, params)
 
 	append({
 		'tag' => "A",
@@ -58,6 +49,94 @@ def a_href(content, href, params={})
 			'href' => href,
 		}
 	})
+
+	self
+end
+
+# class method as URL's will be nice to generate on their own
+def Dynamo.href(href, params={})
+	anchor = ""
+	params.keys.each do |k|
+		if params[k].is_a? String then 
+			if href =~ /\?/ then
+				href += "&amp;"
+			else
+				href += "?"
+			end
+
+			href += "#{CGI.escape(k.to_s)}=#{CGI.escape(params[k].to_s)}"
+
+		elsif params[k] == true then
+			anchor = "##{k}"
+		end
+	end
+
+	href += anchor
+end
+
+# Crazy macro used to generate a table header, with URLs generated
+# and emphasis on the current sort order.
+# The actual sorting will always be done in the module, and 
+# images will be clipped on later...
+def tr_head(params, table, url, headings)
+	if not headings.is_a? Array then return self end
+
+	append({
+		'tag' => "TR", 
+		'attributes' => {
+			'class' => "head",
+		}
+	})
+
+	headings.each do |p|
+		downs = p.downcase
+		heading = Dynamo.new.append(p)
+		order = 'asc'
+		if (downs == params["#{table}_sortby"]) then
+			heading.wrap("STRONG")
+			if params["#{table}_order"] == "asc" then order = "des" end
+		end
+
+		content = Dynamo.new.a_href(heading.to_s, "#{url}", {
+			"#{table}_sortby" => downs,
+			"#{table}_order" => order,
+			"#{table}" => true,
+		})
+
+		append({
+			'tag' => "TD",
+			'content' => content.to_s,
+			'attributes' => {
+				'class' => p,
+			},
+		})
+	end
+	append("</TR>\n")
+
+	self
+end
+
+def tr_data(src, trclass, params)
+	if not params.is_a? Array then return self end
+
+	append({
+		'tag' => "TR", 
+		'attributes' => {
+			'class' => trclass,
+		}
+	})
+
+	params.each do |p|
+		append({
+			'tag' => "TD",
+			'content' => src[p],
+			'attributes' => {
+				'class' => p,
+			},
+		})
+	end
+
+	append("</TR>\n")
 
 	self
 end
@@ -76,6 +155,11 @@ end
 
 def to_s
 	return @value
+end
+
+def sub!(dst, src)
+	@value.sub!(dst, src)
+	self
 end
 
 private

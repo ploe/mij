@@ -93,6 +93,10 @@ body, button, input, select, textarea {
 	vertical-align: middle;
 }
 
+.submissionslist .head IMG {
+	float: right;
+}
+
 .submissionslist .data .article {
 	text-align: left;
 }

@@ -142,6 +142,10 @@ get '/feature' do
 	Feature.get(params)
 end
 
+get '/profile' do
+	Profile.get(params)
+end
+
 post '/critique' do
 	Critique.post(params)	
 end
