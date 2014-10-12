@@ -20,7 +20,7 @@ def Tatl.logged_in(user)
 <SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
 <SPAN class="userstuff"><A href="/submit">submit</A></SPAN>  
 <SPAN class="userstuff"><A href=\"/submissions\">submissions</A></SPAN> 
-<SPAN class="userstuff">#{user.downcase}</SPAN> 
+<SPAN class="userstuff"><A href=\"/profile?user=#{CGI.escape(user)}\">#{user.downcase}</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=about">about</A></SPAN> 
 <SPAN class="userstuff"><A href="/logout">logout</A></SPAN>
 </DIV>

@@ -109,6 +109,10 @@ body, button, input, select, textarea {
 	border-bottom:1px solid #DDDDDD;
 }
 
+.submissionslist tr input {
+	float: left;
+}
+
 .submissionslist td {
 	vertical-align: top;
 	width: 15%;
