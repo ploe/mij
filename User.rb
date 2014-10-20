@@ -181,6 +181,7 @@ def User.fetch_article(user, article, getcontent=true)
 		if getcontent then
 			path = article['path'] + article['cgi-user']
 			article['body'] = GitHub::Markdown.render_gfm(File.read(path))
+			article['critiques'] = fetch_critiques(article)
 		end
 	end
 
@@ -193,7 +194,6 @@ def User.fetch_articlestats(article)
 
 	path = article['path'] + article['cgi-user']
 	article['updated'] = File.mtime(path).to_i
-	article['critiques'] = fetch_critiques(article)
 
 	article
 end
@@ -216,7 +216,7 @@ def User.fetch_submissions(user)
 	submissions = []
 	Dir.foreach(path) do |file|
 		if (file == "..") or (file == ".") then next end
-		submissions.push(User.fetch_article(user, CGI.unescape(file)))
+		submissions.push(User.fetch_article(user, CGI.unescape(file), false))
 	end
 
 	submissions
@@ -229,7 +229,7 @@ def User.fetch_featured(user)
 	submissions = []
 	Dir.foreach(path) do |file|
 		if (file == "..") or (file == ".") then next end
-		submissions.push(User.fetch_article(user, CGI.unescape(file)))
+		submissions.push(User.fetch_article(user, CGI.unescape(file), false))
 	end
 
 	submissions

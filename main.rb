@@ -105,6 +105,10 @@ get '/submissions' do
 	Submissions.render(params)
 end
 
+get '/pending' do
+	Submissions.render(params)
+end
+
 get '/submit' do
 	if params[:client] and params[:client].pseudonym != "" then
 		Submit.render(params)
@@ -144,6 +148,10 @@ end
 
 get '/profile' do
 	Profile.get(params)
+end
+
+get '/remove/:table' do |type|
+	RemoveArticle.get(params)
 end
 
 post '/critique' do

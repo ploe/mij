@@ -111,10 +111,10 @@ def Profile.render_articletable(params, yours, table, href, articles)
 		content.append("<BR>") 
 		verbs = Dynamo.new.append({
 			'tag' => "BUTTON",
-			'content' => "Delete 'em",
+			'content' => "delete 'em",
 			'attributes' => {
 				'id' => "remove#{table}",
-				'formaction' => "/remove#{table}",
+				'formaction' => "/remove/#{table}",
 				'formmethod' => "GET",
 			}
 		})

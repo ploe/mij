@@ -19,8 +19,8 @@ def Tatl.logged_in(user)
 <DIV class="stuffcontainer" align="right">
 <SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
 <SPAN class="userstuff"><A href="/submit">submit</A></SPAN>  
-<SPAN class="userstuff"><A href=\"/submissions\">submissions</A></SPAN> 
-<SPAN class="userstuff"><A href=\"/profile?user=#{CGI.escape(user)}\">#{user.downcase}</A></SPAN> 
+<SPAN class="userstuff"><A href=\"/pending\">pending</A></SPAN> 
+<SPAN class="userstuff"><A href=\"/profile?user=#{CGI.escape(user)}\">#{user.downcase}'s profile</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=about">about</A></SPAN> 
 <SPAN class="userstuff"><A href="/logout">logout</A></SPAN>
 </DIV>
@@ -35,7 +35,7 @@ def Tatl.logged_out
 <BR>
 <DIV class="stuffcontainer" align="right">
 <SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
-<SPAN class="userstuff"><A href=\"/submissions\">submissions</A></SPAN> 
+<SPAN class="userstuff"><A href=\"/pending\">pending</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=about">about</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=login">login</A></SPAN>
 </DIV>
