@@ -6,14 +6,14 @@ def Zine.get(params)
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],
 		'title' => "featured",
-		'content' => Zine.content
+		'content' => Zine.content(params)
 	})
 
 end
 
 private
 
-def Zine.get_featured
+def Zine.get_featured(page=1, perpage)
 	featured = []
 
 	path = "/mij/featured/"
@@ -31,18 +31,30 @@ def Zine.get_featured
 	end
 	featured.reverse!
 
+	page = page.to_i - 1
+	(page * perpage).times do
+		featured.shift
+	end
+
 	featured
 end
 
-def Zine.content
-	featured = Zine.get_featured	
+def Zine.content(params)
+	perpage = 10
 
+	if not params['page'] then params['page'] = 1 end
+	featured = Zine.get_featured(params['page'], perpage)	
 	output = ""
-	featured.each do |f|
+
+	perpage.times do
+		f  = featured.shift
+		if not f then break end
+
 		output += render_content(f)
 	end
 
-	output
+	nav = Zine.render_nav(params['page'].to_i, featured.length, perpage)
+	nav + output + nav
 end
 
 def Zine.render_content(f)
@@ -113,7 +125,48 @@ def Zine.render_date(time)
 	})
 end
 
+def Zine.render_nav(page, len, perpage)
+	nav = Dynamo.new
 
+	if page > 1 then
+		prev = Dynamo.new.a_href("prev", "/zine", {
+                	'page'=> (page-1).to_s,
+        	})
+		prev.wrap("SPAN", {
+			'style' => "float: left;",
+		})
+		nav.append(prev.to_s)
+	end
+
+	total = ((page * perpage) + len) / perpage
+	if ((page * perpage + len) % perpage) != 0 then total += 1 end
+ 
+	if page < total then
+		nextp = Dynamo.new.a_href("next", "/zine", {
+                        'page'=> (page+1).to_s,
+                })
+
+		nextp.wrap("SPAN", {
+			'style' => "float: right;",
+		})
+		nav.append(nextp.to_s)
+	end
+
+	nav.append({
+		'tag' => "DIV",
+		'content' => "Page #{page} of #{total}",
+		'attributes' => {
+			'style' => "text-align: center;",
+		}
+	})
+
+	nav.clear_float
+	nav.wrap("DIV", {
+		'class' => "content",
+	}).append("<BR>\n\n")
+
+	nav.to_s
+end
 
 def Zine.holy_peek
 	[
