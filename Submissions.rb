@@ -35,7 +35,7 @@ def Submissions.render(params)
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],
-		'title' => "submissions",
+		'title' => "pending",
 		'content' => "<DIV class=\"content\">\n" + render_list(submissions, params) + "</DIV><BR>\n",
 	})
 end

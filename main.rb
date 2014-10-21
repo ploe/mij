@@ -175,3 +175,7 @@ post '/keygen' do
 	Keygen.render(params)
 	redirect to("/page?src=about")
 end
+
+post '/remove/:table' do
+	RemoveArticle.post(params)
+end

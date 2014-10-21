@@ -109,6 +109,17 @@ def critique(user, title, body)
 	"Success! Criticism submitted on \"#{article['html-title']}\" by \"#{article['html-user']}\" - Gratz!"
 end
 
+def delete_article(title)
+	article = User.fetch_article(@pseudonym, title, false)
+
+	if not article['exists?'] then
+		return "User: Mate, '#{article['html-title']}' doesn't exist. That's odd."
+	end
+	
+	FileUtils.rm_rf(article["path"])
+	return "Success! I've gone and removed '#{article['html-title']}' for you. You can thank me later!"
+end
+
 def set_pseudonym(str)
 	if (len = str.length) > 42 then
 		return "User: Hey, your pseudonym can only be 42 characters and \"#{str}\" is #{len}. Arbitrary."
