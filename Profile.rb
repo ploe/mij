@@ -24,8 +24,25 @@ def Profile.content(params)
 	})
 	content.append("<BR>\n\n")
 
-	if User.count_featured(CGI.unescape(params[:user])) > 0 then content.append(Profile.render_featured(params)) end
-	if User.count_submissions(CGI.unescape(params[:user])) > 0 then content.append(Profile.render_submissions(params)) end
+	zilch = true
+	if User.count_featured(CGI.unescape(params[:user])) > 0 then 
+		content.append(Profile.render_featured(params)) 
+		zilch = false
+	end
+
+	if User.count_submissions(CGI.unescape(params[:user])) > 0 then 
+		content.append(Profile.render_submissions(params))
+		zilch = false
+	end
+
+	if zilch then
+		content.append({
+			'tag' => "DIV",
+			'content' => "no posts, yet...",
+			'newline' => true,
+			'attributes' => {'class' => "content"},
+		}).append("<BR>\n\n")
+	end
 
 	content.to_s
 end

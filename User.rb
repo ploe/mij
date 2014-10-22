@@ -78,7 +78,7 @@ def post(title, body)
 	end
 
 	Dir.mkdir(post)
-	File.open(post + "/#{@pseudonym}", "w") do |file|
+	File.open(post + "/#{CGI.escape(@pseudonym)}", "w") do |file|
 		file.write(CGI.escapeHTML(body))
 	end
 
@@ -121,30 +121,34 @@ def delete_article(title)
 end
 
 def set_pseudonym(str)
+	pseudonym = {
+		'html' => CGI.escapeHTML(str),
+		'cgi' => CGI.escape(str),
+	}
+
 	if (len = str.length) > 42 then
-		return "User: Hey, your pseudonym can only be 42 characters and \"#{str}\" is #{len}. Arbitrary."
+		return "User: Hey, your pseudonym can only be 42 characters and \"#{pseudonym['html']}\" is #{len}. Arbitrary."
 	end
 
 	if @pseudonym != "" then
-		return "User: Silly... You can't set your username to \"#{str}\" as it's already \"#{@pseudonym}\""
+		return "User: Silly... You can't set your username to \"#{pseudonym['html']}\" as it's already \"#{@pseudonym}\""
 	end
 
-	str = CGI.escape(str)
-	dst =  "/mij/pseudonym/#{str}"
+	dst =  "/mij/pseudonym/#{pseudonym['cgi']}"
 	if File.exists?(dst) then
-		return "User: Gosh, I'm sorry. A user with the pseudonym \"#{str}\" already exists! Whoops..."
+		return "User: Gosh, I'm sorry. A user with the pseudonym \"#{pseudonym['html']}\" already exists! Whoops..."
 	end
 
 	FileUtils.symlink(path, dst)
-	FileUtils.symlink(path + "/posts", "/mij/submissions/" + str)	
-	FileUtils.symlink(path + "/featured", "/mij/featured/" + str)	
+	FileUtils.symlink(path + "/posts", "/mij/submissions/" + pseudonym['cgi'])	
+	FileUtils.symlink(path + "/featured", "/mij/featured/" + pseudonym['cgi'])	
 
 	File.open(path + "/pseudonym", "w") do |file|
-		file.write(str)
+		file.write(pseudonym['cgi'])
 	end
 
 
-	return "Success!"
+	return "Success! You shall now be know as \"#{pseudonym['html']}\""
 end
 
 def User.exists?(email)
@@ -273,7 +277,7 @@ end
 def User.count_buzz(user, article)
 	path, exists = article_exists?(user, article)
 	count = -1
-
+	if not exists then return "something's up" end
 	Dir.foreach(path) do |file|
 		if (file == '.') or (file == '..') then next end
 		count += 1

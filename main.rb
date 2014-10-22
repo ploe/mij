@@ -147,7 +147,13 @@ get '/feature' do
 end
 
 get '/profile' do
-	Profile.get(params)
+	if params[:client] and params[:client].pseudonym != "" then
+		Profile.get(params)
+	elsif params[:client]
+		redirect to("/page?src=register")
+	else	
+		redirect to("/page?src=about")
+	end
 end
 
 get '/remove/:table' do |type|
@@ -168,7 +174,7 @@ post '/feature' do
 end
 
 post '/register' do
-	params[:client].set_pseudonym(params[:pseudonym])
+	Register.post(params)
 end
 
 post '/keygen' do	

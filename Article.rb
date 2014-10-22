@@ -25,7 +25,7 @@ def Article.render_submission(user, article, client)
 	meta = ""
 
 	if article['body'] == nil then
-		content = article.to_s + "<DIV class=\"content\"><IMG src=\"/throbber.gif\"> Article: I'm afraid \"#{article['html-title']}\" by #{article['html-user']} doesn't exist. Soz, pal!</DIV>"
+		content = "<DIV class=\"content\"><IMG src=\"/throbber.gif\"> Article: I'm afraid \"#{article['html-title']}\" by #{article['html-user']} doesn't exist. Soz, pal!</DIV>"
 		meta = meta_refresh(4, "/page?src=about")
 	else
 		added = Article.render_date(article['added'])

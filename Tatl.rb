@@ -12,7 +12,8 @@ private
 
 def Tatl.logged_in(user)
 
-	if user == "" then user = "register" end
+	prompt = "register"
+	if user != "" then prompt = "#{user.downcase}'s profile" end
 
 <<NAVBAR_IN
 <BR>
@@ -20,7 +21,7 @@ def Tatl.logged_in(user)
 <SPAN class="userstuff"><A href="/zine">featured</A></SPAN> 
 <SPAN class="userstuff"><A href=\"/pending\">pending</A></SPAN> 
 <SPAN class="userstuff"><A href="/page?src=about">about</A></SPAN> 
-<SPAN class="userstuff"><A href=\"/profile?user=#{CGI.escape(user)}\">#{user.downcase}'s profile</A></SPAN> 
+<SPAN class="userstuff"><A href=\"/profile?user=#{CGI.escape(user)}\">#{prompt}</A></SPAN> 
 <SPAN class="userstuff"><A href="/submit">submit</A></SPAN>  
 <SPAN class="userstuff"><A href="/logout">logout</A></SPAN>
 </DIV>

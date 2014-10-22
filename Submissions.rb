@@ -16,7 +16,7 @@ def Submissions.render(params)
 				'article' => article,
 				'updated' => File.mtime("#{path}#{user}/#{CGI.escape(article)}").to_i,
 				'added' => File.mtime("#{path}#{user}/#{CGI.escape(article)}/#{user}").to_i,
-				'buzz' => User.count_buzz(user, article),
+				'buzz' => User.count_buzz(CGI.unescape(user), article),
 			}
 			submissions.push(sub)
 		end
