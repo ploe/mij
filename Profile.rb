@@ -151,7 +151,8 @@ def Profile.render_articles(yours, articles)
 			})
 		end
 
-		a['title'] = Dynamo.new.a_href(checkbox.to_s + a['title'], "/article", {
+		
+		a['title'] = checkbox.a_href(a['title'], "/article", {
 			'user' => a['user'],
 			'article' => a['title']
 		}).to_s
