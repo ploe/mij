@@ -14,11 +14,13 @@ def Login.render(params)
 	end
 
 	meta = ""
-	if user and user.newkey == key then
+	if (user) and (user.newkey == key) and not user.perks['banned'] then
 		user.login
 		prompt = "<IMG src=\"throbber.gif\"> Success! You're now logged in... Champ."
 		if user.pseudonym == "" then meta = meta_refresh(4, "/page?src=register")
 		else meta = meta_refresh(4, "/zine") end
+	else
+		prompt = "Login: Failed..."
 	end
 
 	tatl = Tatl.render(user)

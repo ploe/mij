@@ -4,6 +4,7 @@ require 'sinatra'
 set :bind, '0.0.0.0'
 set :port, 8989
 set :environment, :production
+set :logging, true
 
 require 'json'
 require 'cgi'
@@ -128,7 +129,7 @@ get '/critique' do
 end
 
 get '/' do
-	redirect to("/index.html")	
+	redirect to("/page?src=index")	
 end
 
 # Zine class is listed as featured on the front page so I have set up
