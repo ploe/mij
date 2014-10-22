@@ -98,7 +98,7 @@ end
 
 get '/logout' do
 	if params[:client] then params[:client].logout end
-	redirect to('/page?src=about')	
+	redirect to('/zine')	
 end
 
 get '/submissions' do
@@ -115,7 +115,7 @@ get '/submit' do
 	elsif params[:client]
 		redirect to("/page?src=register")
 	else	
-		redirect to("/page?src=about")
+		redirect to("/page?src=login")
 	end
 end
 
@@ -128,7 +128,7 @@ get '/critique' do
 end
 
 get '/' do
-	redirect to("/page?src=about")	
+	redirect to("/index.html")	
 end
 
 # Zine class is listed as featured on the front page so I have set up
@@ -152,7 +152,7 @@ get '/profile' do
 	elsif params[:client]
 		redirect to("/page?src=register")
 	else	
-		redirect to("/page?src=about")
+		redirect to("/page?src=login")
 	end
 end
 
@@ -179,7 +179,7 @@ end
 
 post '/keygen' do	
 	Keygen.render(params)
-	redirect to("/page?src=about")
+	redirect to("/zine")
 end
 
 post '/remove/:table' do
