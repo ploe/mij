@@ -9,7 +9,7 @@ set :logging, true
 require 'json'
 require 'cgi'
 require 'github/markdown'
-require './mij.rb'
+require '/mij/src/mij.rb'
 
 $stderr.puts <<LICENSE
 

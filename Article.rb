@@ -52,7 +52,7 @@ def Article.render_critiques(critiques)
 		added = Article.render_date(c['added'])	
 		tmp.append({
 			'tag' => "DIV",
-			'content' => "<A href=\"/profile?user=#{c['cgi-user']}\">#{c['html-user']}</A> #{Article.holy_says}: #{added}",
+			'content' => "<A href=\"/profile?user=#{c['cgi-user']}\">#{c['html-user']}</A> #{c['says']}: #{added}",
 			'newline' => true,
 		})
 	
@@ -123,44 +123,5 @@ def Article.render_date(time)
 end
 
 private
-
-def Article.holy_says
-	[
-		"says",
-		"shouts",
-		"whispers",
-		"suggests",
-		"opines",
-		"orates",
-		"soliloquizes",
-		"s-s-s-stutters",
-		"misspels",
-		"reckons",
-		"assumes",
-		"puts out there",
-		"puts forward",
-		"moans that",
-		"coughs up",
-		"spews out",
-		"preaches",
-		"prays",
-		"articulates",
-		"argues",
-		"distills",
-		"demonstrates",
-		"dreams that",
-		"dishes",
-		"doles outs",
-		"might've said",
-		"types",
-		"scribes",
-		"writes",
-		"draws",
-		"summoned",
-		"throws out",
-		"presents",
-		"reveals",
-	].sample
-end
 
 end	

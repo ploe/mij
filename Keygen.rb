@@ -8,7 +8,7 @@ require 'digest/sha2'
 
 require '../Emailer.rb'
 
-require './User.rb'
+require '/mij/src/User.rb'
 
 def Keygen.render(params)
 	if (not params[:email]) then return ["Keygen: No email input"] end

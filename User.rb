@@ -1,5 +1,6 @@
 #! /usr/bin/ruby
 
+
 # User is the type we use to represent a client and their perks in mij.
 #
 # The pseudonym is stored as CGI escaped, this means we can have all kinds
@@ -15,7 +16,10 @@
 # perks are all loaded in to memory as a set when we identify the user
 #
 # Their key is the session key that the user is logged in with.
+
 class User
+
+require 'cgi'
 
 attr_accessor :perks, :email, :key, :pseudonym
 
@@ -159,6 +163,11 @@ def User.register(email)
 	path = "/mij/accounts/" + email
 
 	home = Dir.mkdir(path)
+
+	File.open(path + "/email", "w") do |file|
+		file.write(email)
+	end
+
 	File.open(path + "/key", "w").close
         Dir.mkdir(path + "/posts")
         Dir.mkdir(path + "/perks")
@@ -169,6 +178,7 @@ end
 def User.feature(user, article)
 	user = CGI.escape(user)
 	article = CGI.escape(article)
+
 	FileUtils.mv(
 		"/mij/pseudonym/#{user}/posts/#{article}", 
 		"/mij/pseudonym//#{user}/featured/#{article}"
@@ -264,6 +274,7 @@ def User.fetch_critiques(article)
 			'html-user' => CGI.escapeHTML(CGI.unescape(file)),
 			'critique' => GitHub::Markdown.render_gfm(File.read(fullpath)),
 			'added' => File.mtime(fullpath).to_i,
+			'says' => User.holy_says
 		})
 	end
 
@@ -272,6 +283,45 @@ def User.fetch_critiques(article)
 	end
 
 	critiques.reverse!
+end
+
+def User.holy_says
+	[
+		"says",
+		"shouts",
+		"whispers",
+		"suggests",
+		"opines",
+		"orates",
+		"soliloquizes",
+		"s-s-s-stutters",
+		"misspels",
+		"reckons",
+		"assumes",
+		"puts out there",
+		"puts forward",
+		"moans that",
+		"coughs up",
+		"spews out",
+		"preaches",
+		"prays",
+		"articulates",
+		"argues",
+		"distills",
+		"demonstrates",
+		"dreams that",
+		"dishes",
+		"doles outs",
+		"might've said",
+		"types",
+		"scribes",
+		"writes",
+		"draws",
+		"summoned",
+		"throws out",
+		"presents",
+		"reveals",
+	].sample
 end
 
 def User.count_buzz(user, article)
@@ -307,6 +357,15 @@ def User.count_featured(user)
 	end
 
 	count
+end
+
+def User.fetch_email(user)
+	path = "/mij/pseudonym/#{CGI.escape(user)}/email"
+	if File.exists?(path) then
+		return File.read(path)
+	end
+
+	return nil
 end
 
 
