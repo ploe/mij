@@ -10,7 +10,7 @@ def Article.render(params)
 	
 	content, meta = render_submission(user, article, client)
 
-	madlib File.read("res/bare.html"), {
+	madlib File.read("/mij/src/res/bare.html"), {
 		'content' => content,
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],

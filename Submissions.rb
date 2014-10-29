@@ -12,7 +12,7 @@ def Submissions.render(params)
 			if (article == "..") or (article == ".") then next end
 			article = CGI.unescape(article)
 			sub = {
-				'user' => user,
+				'user' => CGI.unescape(user),
 				'article' => article,
 				'updated' => File.mtime("#{path}#{user}/#{CGI.escape(article)}").to_i,
 				'added' => File.mtime("#{path}#{user}/#{CGI.escape(article)}/#{user}").to_i,
@@ -31,7 +31,7 @@ def Submissions.render(params)
 	order = params[:order] || "des"
 	if order == "des" then submissions.reverse! end
 
-	madlib(File.read("res/bare.html"), {
+	madlib(File.read("/mij/src/res/bare.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],

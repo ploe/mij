@@ -13,7 +13,7 @@ def Feature.get(params)
 	user = escape_param(params[:user])
 	article = escape_param(params[:article])
 
-	madlib File.read('res/confirmation.html'), {
+	madlib File.read('/mij/src/res/confirmation.html'), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'prompt' => "feature <A href=\"/article?user=#{user['cgi']}&amp;article=#{article['cgi']}\">#{article['html']}</A> by <A href=\"/profile?user=#{user['cgi']}\">#{user['html']}</A> - ey?",

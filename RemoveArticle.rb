@@ -1,7 +1,7 @@
 module RemoveArticle
 
 def RemoveArticle.get(params)
-	madlib(File.read("res/bare.html"), {
+	madlib(File.read("/mij/src/res/bare.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],
@@ -88,7 +88,7 @@ def RemoveArticle.render_confirm(params)
 end
 
 def RemoveArticle.post(params)
-	madlib(File.read("res/bare.html"), {
+	madlib(File.read("/mij/src/res/bare.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'meta' => meta_refresh(4, "/profile?user=#{CGI.escape(params[:client].pseudonym)}"),

@@ -1,7 +1,7 @@
 module Zine
 
 def Zine.get(params)
-	madlib(File.read("res/bare.html"), {
+	madlib(File.read("/mij/src/res/bare.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],

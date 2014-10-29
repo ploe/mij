@@ -20,7 +20,7 @@ def Post.render(params)
 		prompt = "<IMG src=\"/throbber.gif\"> " + prompt
 	end
 
-	madlib File.read("res/bare.html"), {
+	madlib File.read("/mij/src/res/bare.html"), {
 		'content' => "<DIV class=\"content\"><P>#{prompt}</P></DIV><BR>",
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],

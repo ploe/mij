@@ -30,7 +30,7 @@ def Keygen.render(params)
 		file.write(sha.to_s)	
 	}
 	
-	Email.render("./res/keygen_email.html", email)
+	Email.render("/mij/src/res/keygen_email.html", email)
 end
 
 end

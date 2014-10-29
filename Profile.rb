@@ -2,7 +2,7 @@ module Profile
 
 def Profile.get(params)
 	Profile.set_defaults(params)
-	madlib(File.read("res/bare.html"), {
+	madlib(File.read("/mij/src/res/bare.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'tatl' => params[:tatl],

@@ -25,7 +25,7 @@ def Login.render(params)
 
 	tatl = Tatl.render(user)
 
-	madlib File.read("res/bare.html"), {
+	madlib File.read("/mij/src/res/bare.html"), {
 		'content' => "<DIV class=\"content\">#{prompt}</DIV><BR>",
 		'domain' => params[:domain],
 		'meta' => meta,

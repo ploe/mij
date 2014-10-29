@@ -9,7 +9,7 @@ def Critique.render(params)
 	article = User.fetch_article(user, article, false)
 
 	if article['exists?'] then
-		madlib File.read("./res/form.html"), {
+		madlib File.read("/mij/src/res/form.html"), {
 			'domain' => params[:domain],
 			'favicon' => params[:favicon],
 			'prompt' => "What do you reckon...?",
@@ -56,7 +56,7 @@ def Critique.post(params)
 
 	madlibs['content'] = "<DIV class=\"content\">#{madlibs['content']}</DIV><BR>\n" 
 
-	madlib(File.read("./res/bare.html"), madlibs)
+	madlib(File.read("/mij/src/res/bare.html"), madlibs)
 end
 
 end

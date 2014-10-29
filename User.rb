@@ -20,6 +20,7 @@
 class User
 
 require 'cgi'
+require 'github/markdown'
 
 attr_accessor :perks, :email, :key, :pseudonym
 

@@ -2,7 +2,7 @@ module Rejection
 
 require '/mij/src/User.rb'
 require '/mij/src/Dynamo.rb'
-require '/mij/src/Emailer.rb'
+require '/mij/Emailer.rb'
 
 def Rejection.get(user, title, reason="no reason given...")
 	to = User.fetch_email(user)
@@ -12,7 +12,7 @@ def Rejection.get(user, title, reason="no reason given...")
 		FileUtils.rm_rf(article['path'])
 	
 
-		Email.render("res/rejection.html", {
+		Email.render("/mij/src/res/rejection.html", {
 			'to' => to,
 			'body' => article['body'],
 			'subject' => "'#{CGI.escapeHTML(title)}' rejection - ploe.co.uk",

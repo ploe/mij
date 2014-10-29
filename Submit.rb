@@ -6,7 +6,7 @@
 module Submit
 
 def Submit.render(params)
-	madlib File.read("res/form.html"), {
+	madlib File.read("/mij/src/res/form.html"), {
 		'domain' => params[:domain],
 		'favicon' => params[:favicon],
 		'prompt' => prompt,
