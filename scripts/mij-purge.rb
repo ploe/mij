@@ -12,7 +12,7 @@ Dir.foreach("/mij/pseudonym") do |user|
 
 	posts.each do |p|
 		now = Time.new.to_i
-		if now > ((File.mtime(p['added']).to_i) + timeout) then
+		if now > (p['added'] + timeout) then
 			puts "mij-purge: removing #{user}'s '#{post}'"
 
 			Rejection.get(p['user'], p['title'], "The article wasn't featured after seven days so it was purged from the site.")
