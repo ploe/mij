@@ -41,8 +41,11 @@ dynamo.append("<BR><P>Another paragraph!</P><BR>")
 ```
 
 **tag:** The HTML element you want to render *e.g. DIV, P, SPAN, IMG, A, etc.*
+
 **content:** The string you want sandwiching between your tags. If you ignore this field you will only have one tag, for if you want to render IMG or something like it.
+
 **newline:** If true there will be a newline after this block of HTML. For pretty printing.
+
 **attributes:** The HTML element attributes. String values are inserted between quotes, boolean true values will only render the key.
 
 # Tatl.rb
