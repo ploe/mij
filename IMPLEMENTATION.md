@@ -17,6 +17,34 @@ madlib is a template function. It's a simple search and replace which takes all 
 
 The benefit of this over something like 'erb' is that all my bog standard HTML literate tools, like my browser, don't need anything special to read my templates. Any dynamic elements are simply stitched together by the appropriate module. I like how straightforwad/clean this approach is.
 
+# Dynamo.rb
+
+I changed approach slightly when generating dynamic HTML elements. Whereas previously I used flat HTML in the Ruby source, I've now written a bunch of macros wrapped up in a class that are used to render the objects. The idea is that you build the dynamic objects (**Dynamos**) by appending chunks of HTML to them. You then drop them on the prerendered template.
+
+## def append(params)
+
+```ruby
+dynamo = Dynamo.new
+
+dynamo.append({
+	'tag' => "P",
+	'content' => "The content that gets wrapped in P tags",
+	'newline' => true,
+	'attributes' => {
+		'class' => "css_class",
+		'id' => "paragraph_id",
+		'hidden' => true,
+	}
+})
+
+dynamo.append("<BR><P>Another paragraph!</P><BR>")
+```
+
+**tag:** The HTML element you want to render *e.g. DIV, P, SPAN, IMG, A, etc.*
+**content:** The string you want sandwiching between your tags. If you ignore this field you will only have one tag, for if you want to render IMG or something like it.
+**newline:** If true there will be a newline after this block of HTML. For pretty printing.
+**attributes:** The HTML element attributes. String values are inserted between quotes, boolean true values will only render the key.
+
 # Tatl.rb
 
 The navigation bar at the top of the screen. Pretty much just two flat HTML templates kept in the one place for convenience. It renders all the user related stuff if the user is logged in. Otherwise it misses that gear out and has the option to log in. Perceptive readers might notice this module is named for Link's fairy in The Legend of Zelda: Majora's Mask. This is because the navigation bar in my blog is called Navi, Link's fairy in the previous game.
