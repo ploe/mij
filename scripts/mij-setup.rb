@@ -1,7 +1,6 @@
 #! /usr/bin/ruby
 
-Dir.mkdir("/mij")
-%w(accounts  featured  pseudonym  submissions).each do |file|
+if not File.exists?("/mij") then Dir.mkdir("/mij") end%w(accounts  featured  pseudonym  submissions).each do |file|
 	begin
 		Dir.mkdir("/mij/" + file)
 	rescue SystemCallError

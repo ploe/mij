@@ -161,6 +161,10 @@ get '/remove/:table' do |type|
 	RemoveArticle.get(params)
 end
 
+get '/bugs.png' do
+	send_file(["public/code.png", "public/tits.png"].sample)
+end
+
 post '/critique' do
 	Critique.post(params)	
 end
