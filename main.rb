@@ -124,6 +124,10 @@ get '/article' do
 	Article.render(params)
 end
 
+get '/preview' do
+	Preview.get(params)
+end
+
 get '/critique' do
 	Critique.render(params)
 end

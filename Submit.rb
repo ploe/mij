@@ -15,7 +15,8 @@ def Submit.render(params)
 		'title-input' => "<P><INPUT type=\"text\" name=\"article[title]\" id=\"title\" placeholder=\"Title\"></P>\n",
 		'verbs' => 
 			"<DIV class=\"verbs\">\n" +
-			"<BUTTON formmethod=\"post\" id=\"preview\" formaction=\"./post\">submit</BUTTON>\n" +
+			"<BUTTON formmethod=\"get\" id=\"preview\" formaction=\"./preview\">preview</BUTTON>\n" +
+			"<BUTTON formmethod=\"post\" id=\"post\" formaction=\"./post\">submit</BUTTON>\n" +
 			"</DIV>"
 	}
 end
