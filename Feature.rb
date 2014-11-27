@@ -7,6 +7,7 @@ def Feature.post(params)
 	article = escape_param(params[:article])
 
 	User.feature(user['text'], article['text'])
+	Twitterer.post("Featured: #{params[:protocol]}://#{params[:domain]}/article?user=#{user['cgi']}&amp;article=#{article['cgi']}")
 end
 
 def Feature.get(params)
