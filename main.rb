@@ -5,6 +5,7 @@ set :bind, '0.0.0.0'
 set :port, 8989
 set :environment, :production
 set :logging, true
+set :server, 'webrick'
 
 require 'json'
 require 'cgi'
@@ -62,6 +63,8 @@ before do
 	if params[:domain] == "ploe.co.uk" then
 		params[:favicon].sub!(/dev/, "live")
 	end
+
+	params[:protocol] = request.scheme
 
 	params[:client] = get_user(request)
 	params[:tatl] = Tatl.render(params[:client])

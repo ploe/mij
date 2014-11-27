@@ -16,8 +16,10 @@ def Post.render(params)
 
 	meta = ""
 	if prompt =~ /Success/i then
-		meta = meta_refresh(4, "/article?user=#{CGI.escape(client.pseudonym)}&amp;article=#{CGI.escape(article['title'])}")
+		url = "/article?user=#{CGI.escape(client.pseudonym)}&amp;article=#{CGI.escape(article['title'])}"
+		meta = meta_refresh(4, url)
 		prompt = "<IMG src=\"/throbber.gif\"> " + prompt
+		Twitterer.post("New post: #{params[:protocol]}://#{params[:domain] + url}")
 	end
 
 	madlib File.read("/mij/src/res/bare.html"), {
