@@ -90,8 +90,8 @@ def Article.render_verbs(article, client)
 	if client and client.authentic then
 		content = 
 			"<DIV class=\"verbs\">\n<FORM>\n" +
-			"<INPUT type=\"hidden\" name=\"user\" value=\"#{article['html-user']}\">\n" +
-			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['title']}\">\n"
+			"<INPUT type=\"hidden\" name=\"user\" value=\"#{article['cgi-user']}\">\n" +
+			"<INPUT type=\"hidden\" name=\"article\" value=\"#{article['cgi-title']}\">\n"
 
 		if article['path'] !~ /featured/ then
 			if client.perks['editor'] then 
